@@ -1,0 +1,83 @@
+<!-- save as alumni-events.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Alumni Connect — Events & Reunions</title>
+  <style>
+    :root{--bg:#f3f4f6;--muted:#64748b;--accent:#5c68b6;--sidebar-grad: linear-gradient(135deg,#faf8f7 0%, #5c68b6 100%);--border:#e5e7eb;--shadow:0 6px 18px rgba(15,23,42,0.06)}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"Segoe UI",sans-serif;background:var(--bg);color:#111827;min-height:100vh}
+    .sidebar{position:fixed;left:0;top:0;bottom:0;width:220px;padding:24px;background:var(--sidebar-grad);color:#fff;box-shadow:var(--shadow);overflow:auto}
+    main{margin-left:220px;padding:28px}
+    .events{margin-top:20px;display:flex;flex-direction:column;gap:14px}
+    .event{background:#fff;padding:14px;border-radius:10px;border:1px solid var(--border);box-shadow:var(--shadow)}
+    .btn{padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:700}
+    .btn-primary{background:var(--accent);color:#fff}
+    .small{color:var(--muted);font-size:13px}
+    @media (max-width:820px){ .sidebar{position:relative;width:100%} main{margin-left:0} }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div style="display:flex;gap:12px;align-items:center"><div style="font-size:28px">🎓</div><div><div style="font-weight:700">Alumni Connect</div><div class="small">Events & Reunions</div></div></div>
+    <nav style="margin-top:20px;display:flex;flex-direction:column;gap:8px">
+      <a href="alumni-dashboard.html" style="color:#fff;text-decoration:none">🏠 Overview</a>
+      <a href="alumni-network.html" style="color:#fff;text-decoration:none">👥 Network</a>
+      <a href="alumni-opportunities.html" style="color:#fff;text-decoration:none">🤝 Opportunities</a>
+      <a href="alumni-events.html" style="color:#fff;text-decoration:none;font-weight:700">📅 Events</a>
+      <a href="success.html" class="nav-item ">⭐ Success Stories</a>
+    </nav>
+    <div style="margin-top:22px"><button id="logoutBtn" style="width:100%;padding:10px;border-radius:10px;border:none;background:#fff;color:var(--accent);font-weight:700">Logout 🚪</button></div>
+  </aside>
+
+  <main>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <h2 style="margin:0">Events & Reunions</h2>
+        <div class="small">Create reunions, manage RSVPs and publish event recaps for alumni</div>
+      </div>
+      <div>
+      </div>
+    </div>
+
+    <div class="events" id="eventsList">
+      <div class="event">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:700">Class of 2015 Reunion</div>
+            <div class="small">Dec 6, 2025 · City Alumni Centre</div>
+          </div>
+        </div>
+        <p style="margin-top:8px;color:var(--muted)">In-person reunion with panel talks and networking dinner. RSVP required.</p>
+      </div>
+
+      <div class="event">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-weight:700">Tech Networking Night</div>
+            <div class="small">Nov 19, 2025 · Online</div>
+          </div>
+        </div>
+        <p style="margin-top:8px;color:var(--muted)">Join alumni across tech for talks, mentor sessions and company showcases.</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.getElementById('eventsList').addEventListener('click', (e)=>{
+      const btn = e.target.closest('button');
+      if (!btn) return;
+      if (btn.innerText.trim().toLowerCase() === 'register') {
+        alert('Registered (demo).'); btn.disabled=true; btn.innerText='Registered';
+      }
+    });
+    document.getElementById('logoutBtn').addEventListener('click', ()=> {
+      if (!confirm('Logout?')) return;
+      try { sessionStorage.clear(); } catch(e) {}
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>

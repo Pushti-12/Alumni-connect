@@ -1,0 +1,9 @@
+com\example\alumniconnect\controller\AuthController.class
+com\example\alumniconnect\config\DatabaseInitializer.class
+com\example\alumniconnect\controller\ProfileController.class
+com\example\alumniconnect\config\AppConfig.class
+com\example\alumniconnect\controller\UserController.class
+com\example\alumniconnect\AlumniConnectApplication.class
+com\example\alumniconnect\controller\RequestsController.class
+com\example\alumniconnect\config\AppConfig$1.class
+com\example\alumniconnect\config\SecurityConfig.class

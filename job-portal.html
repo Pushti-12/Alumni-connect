@@ -1,0 +1,360 @@
+<!-- save as internships-and-jobs.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Opportunities</title>
+  <style>
+    :root{
+      --primary-orange: #faf8f7;
+      --primary-blue: #1e40af;
+      --primary-green: #16a34a;
+      --secondary-gray: #f3f4f6;
+      --border-color: #e5e7eb;
+      --text-dark: #1f2937;
+      --white: #ffffff;
+      --shadow: 0 4px 6px rgba(0,0,0,0.07);
+      --shadow-lg: 0 10px 15px rgba(0,0,0,0.08);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--secondary-gray);
+      color:var(--text-dark);
+      min-height:100vh;
+    }
+
+    /* Sidebar (keeps same look as your dashboard) */
+    .sidebar{
+      position:fixed; left:0; top:0; bottom:0;
+      width:200px;
+      padding:24px 16px;
+      background: linear-gradient(135deg,var(--primary-orange) 0%, #5c68b6 100%);
+      color:#fff;
+      overflow:auto;
+      box-shadow: var(--shadow-lg);
+    }
+    .sidebar .logo{font-size:30px}
+    .sidebar h1{font-size:18px;line-height:1.1;margin-top:6px}
+    .nav-menu{margin-top:24px; display:flex;flex-direction:column; gap:8px}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:10px;border-radius:8px;color:rgba(255,255,255,0.9);text-decoration:none}
+    .nav-item:hover{background:rgba(255,255,255,0.12)}
+
+    /* Main content */
+    main{
+      margin-left:200px;
+      padding:32px;
+      min-height:100vh;
+    }
+    .page-title{font-size:26px;margin-bottom:6px}
+    .desc{color:#475569;margin-bottom:20px}
+
+    /* Top controls */
+    .controls{display:flex;gap:12px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
+    .search{
+      padding:8px 12px;border-radius:10px;border:1px solid var(--border-color);width:360px;
+    }
+    .fresh-btn{padding:8px 12px;border-radius:10px;border:1px solid #c7d2fe;background:#eef2ff;cursor:pointer}
+
+    /* Section headings */
+    .section{
+      margin-top:28px;
+    }
+    .section h2{font-size:20px;margin-bottom:8px}
+    .section .subdesc{color:#64748b;font-size:13px;margin-bottom:14px}
+
+    /* Grid of portals */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+      gap:18px;
+    }
+    .card{
+      background:#fff;border-radius:12px;padding:18px;box-shadow:var(--shadow);
+      display:flex;flex-direction:column;gap:10px;border:1px solid var(--border-color);
+    }
+    .card .head{display:flex;align-items:center;gap:12px}
+    .logo-bubble{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;background:linear-gradient(135deg,#e9ecef,#f8fafc)}
+    .card h3{margin:0;font-size:18px}
+    .card p{margin:0;color:#475569;font-size:14px}
+    .card .links{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
+    .btn{padding:8px 12px;border-radius:8px;text-decoration:none;border:1px solid var(--border-color);background:#fff;color:var(--text-dark);font-weight:600}
+    .btn.primary{background:#eef2ff;border-color:#c7d2fe;color:#1e40af}
+    .meta{font-size:12px;color:#64748b}
+
+    /* small screens */
+    @media (max-width:700px){
+      .search{width:100%}
+      main{padding:18px;margin-left:0}
+      .sidebar{position:relative;width:100%;display:flex;flex-direction:row;gap:12px;align-items:center}
+      .nav-menu{flex-direction:row;overflow:auto;padding-bottom:12px}
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar" aria-label="sidebar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="logo">🎓</div>
+      <div>
+        <h1>Alumni<br/>Portal</h1>
+      </div>
+    </div>
+
+    <nav class="nav-menu" aria-label="main navigation">
+      <a class="nav-item" href="dashboard.html">🏠 Dashboard</a>
+      <a class="nav-item" href="network.html">👥 Networking</a>
+      <a class="nav-item" href="job-portal.html">💼 job portal</a>
+      <a class="nav-item" href="events.html">📅 Events</a>
+      <a href="success.html" class="nav-item ">⭐ Success Stories</a>
+    </nav>
+
+    <div style="margin-top:18px">
+      <!-- added id so we can bind logout behaviour -->
+      <button id="logoutBtn" style="width:100%;padding:10px;border-radius:10px;border:none;background:#fff;color:#5c68b6;font-weight:700">Logout 🚪</button>
+    </div>
+  </aside>
+
+  <main>
+    <h1 class="page-title">Opportunities</h1>
+    <p class="desc">Quick links to the most active internship and job platforms in India. Use the search to filter by platform name or keywords (e.g., "remote", "marketing").</p>
+
+    <div class="controls">
+      <input class="search" id="globalSearch" placeholder="Filter platforms across Internships & Jobs (e.g., 'remote', 'startup', 'engineering')" />
+      <button class="fresh-btn" id="refreshBtn">Refresh counts</button>
+      <div style="margin-left:auto;color:#475569;font-size:13px">Showing both Internships and Jobs</div>
+    </div>
+
+    <!-- INTERNSHIPS SECTION -->
+    <section class="section" id="internshipsSection">
+      <h2>Latest Internships</h2>
+      <p class="subdesc">Internship marketplaces & startup internship sources — click to open their listings.</p>
+
+      <div class="grid" id="internshipsGrid">
+        <!-- Internshala -->
+        <div class="card app-card" data-title="Internshala" data-type="internship">
+          <div class="head">
+            <div class="logo-bubble">I</div>
+            <div>
+              <h3>Internshala</h3>
+              <div class="meta">India's largest internship platform.</div>
+            </div>
+          </div>
+          <p>Search paid & remote internships across cities and domains. Student-friendly filters for stipend, duration, and location.</p>
+          <div class="links">
+            <a class="btn primary" target="_blank" rel="noopener" href="https://internshala.com">Open</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://internshala.com/internships/">Search internships</a>
+          </div>
+        </div>
+
+        <!-- LinkedIn Internships -->
+        <div class="card app-card" data-title="LinkedIn Internships" data-type="internship">
+          <div class="head">
+            <div class="logo-bubble">in</div>
+            <div>
+              <h3>LinkedIn Jobs — Internship</h3>
+              <div class="meta">Company-posted internship listings and recruiter reach.</div>
+            </div>
+          </div>
+          <p>Large collection of internships by companies and startups — good when you want visibility with recruiters.</p>
+          <div class="links">
+            <a class="btn primary" target="_blank" rel="noopener" href="https://www.linkedin.com/jobs/internship-jobs">Open</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://www.linkedin.com/jobs/search/?keywords=internship&location=India">Search internships</a>
+          </div>
+        </div>
+
+        <!-- LetsIntern -->
+        <div class="card app-card" data-title="LetsIntern" data-type="internship">
+          <div class="head">
+            <div class="logo-bubble">L</div>
+            <div>
+              <h3>LetsIntern</h3>
+              <div class="meta">Project-based & mentored internships.</div>
+            </div>
+          </div>
+          <p>Curated internships and live projects across tech, design, and business domains — good for skill-building internships.</p>
+          <div class="links">
+            <a class="btn primary" target="_blank" rel="noopener" href="https://letsintern.in">Open</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://letsintern.in/current-internships/">Search internships</a>
+          </div>
+        </div>
+
+        <!-- Indeed (internships) -->
+        <div class="card app-card" data-title="Indeed Internships" data-type="internship">
+          <div class="head">
+            <div class="logo-bubble">Nd</div>
+            <div>
+              <h3>Indeed India (Internships)</h3>
+              <div class="meta">Mass job board with internship listings.</div>
+            </div>
+          </div>
+          <p>Filter by city and set alerts for paid internships and on-site roles in major Indian cities.</p>
+          <div class="links">
+            <a class="btn primary" target="_blank" rel="noopener" href="https://in.indeed.com/q-internship-jobs.html">Open</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://in.indeed.com/jobs?q=internship">Search internships</a>
+          </div>
+        </div>
+
+        <!-- AngelList / Wellfound -->
+        <div class="card app-card" data-title="AngelList" data-type="internship">
+          <div class="head">
+            <div class="logo-bubble">A</div>
+            <div>
+              <h3>AngelList / Wellfound</h3>
+              <div class="meta">Startup internships (product, engineering, growth).</div>
+            </div>
+          </div>
+          <p>Great for joining early-stage startups — apply directly to founders and hiring managers.</p>
+          <div class="links">
+            <a class="btn primary" target="_blank" rel="noopener" href="https://wellfound.com">Open</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://wellfound.com/jobs?type=internship&location=India">Search internships</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- JOBS SECTION -->
+    <section class="section" id="jobsSection">
+      <h2>Latest jobs</h2>
+      <p class="subdesc">General job boards and fresher-focused portals to search full-time roles, internships that convert to jobs, and fresher hiring drives.</p>
+
+      <div class="grid" id="jobsGrid">
+        <!-- Naukri -->
+        <div class="card app-card" data-title="Naukri" data-type="job">
+          <div class="head">
+            <div class="logo-bubble">N</div>
+            <div>
+              <h3>Naukri.com</h3>
+              <div class="meta">One of India’s largest job portals.</div>
+            </div>
+          </div>
+          <p>Search jobs by experience, location and function. Good for campus hiring and experienced roles across industries.</p>
+          <div class="links">
+            <a class="btn primary" target="_blank" rel="noopener" href="https://www.naukri.com">Open</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://www.naukri.com/jobs">Search jobs</a>
+          </div>
+        </div>
+
+        <!-- Indeed Jobs -->
+        <div class="card app-card" data-title="Indeed" data-type="job">
+          <div class="head">
+            <div class="logo-bubble">Nd</div>
+            <div>
+              <h3>Indeed India</h3>
+              <div class="meta">Global job aggregator with strong Indian listings.</div>
+            </div>
+          </div>
+          <p>Large volume of jobs in all domains. Use location filters and job alerts for fresher and experienced roles.</p>
+          <div class="links">
+            <a class="btn primary" target="_blank" rel="noopener" href="https://in.indeed.com">Open</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://in.indeed.com/jobs">Search jobs</a>
+          </div>
+        </div>
+
+        <!-- LinkedIn Jobs -->
+        <div class="card app-card" data-title="LinkedIn Jobs" data-type="job">
+          <div class="head">
+            <div class="logo-bubble">in</div>
+            <div>
+              <h3>LinkedIn Jobs</h3>
+              <div class="meta">Professional network + recruiter outreach.</div>
+            </div>
+          </div>
+          <p>Best when you want role visibility plus networking — recruiters often contact candidates directly via LinkedIn.</p>
+          <div class="links">
+            <a class="btn primary" target="_blank" rel="noopener" href="https://www.linkedin.com/jobs">Open</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://www.linkedin.com/jobs/search/?location=India">Search jobs</a>
+          </div>
+        </div>
+
+        <!-- Monster -->
+        <div class="card app-card" data-title="Monster" data-type="job">
+          <div class="head">
+            <div class="logo-bubble">M</div>
+            <div>
+              <h3>Monster India</h3>
+              <div class="meta">Large job portal with career resources and resume features.</div>
+            </div>
+          </div>
+          <p>Offers job listings across sectors and tools to improve resumes and visibility to recruiters.</p>
+          <div class="links">
+            <a class="btn primary" target="_blank" rel="noopener" href="https://www.monsterindia.com">Open</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://www.monsterindia.com/search/advanced">Search jobs</a>
+          </div>
+        </div>
+
+        <!-- FreshersWorld -->
+        <div class="card app-card" data-title="FreshersWorld" data-type="job">
+          <div class="head">
+            <div class="logo-bubble">FW</div>
+            <div>
+              <h3>FreshersWorld</h3>
+              <div class="meta">Fresher jobs, campus drives, and entry-level roles.</div>
+            </div>
+          </div>
+          <p>Focuses on entry-level hiring, internships-to-job conversions, and campus recruitment drives.</p>
+          <div class="links">
+            <a class="btn primary" target="_blank" rel="noopener" href="https://www.freshersworld.com">Open</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://www.freshersworld.com/jobs">Search jobs</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <p style="margin-top:18px;color:#475569;font-size:13px">Tip: use the search box above to quickly filter both Internships and Jobs. If you want separate filters or tabs just for Jobs vs Internships, I can add that next.</p>
+  </main>
+
+  <script>
+    // Combined filtering for both sections
+    const searchInput = document.getElementById('globalSearch');
+    const refreshBtn = document.getElementById('refreshBtn');
+    const allCards = Array.from(document.querySelectorAll('.app-card'));
+
+    function filterCards() {
+      const q = searchInput.value.trim().toLowerCase();
+      allCards.forEach(card => {
+        const title = (card.dataset.title || '').toLowerCase();
+        const txt = (card.innerText || '').toLowerCase();
+        // show card if query matches title or inner text
+        const show = q === '' || title.includes(q) || txt.includes(q);
+        card.style.display = show ? 'block' : 'none';
+      });
+    }
+
+    searchInput.addEventListener('input', filterCards);
+
+    // Placeholder "refresh counts" action — update visually; can be wired to real APIs
+    refreshBtn.addEventListener('click', () => {
+      refreshBtn.textContent = 'Updated ✔';
+      refreshBtn.disabled = true;
+      setTimeout(()=> {
+        refreshBtn.textContent = 'Refresh counts';
+        refreshBtn.disabled = false;
+      }, 1400);
+    });
+
+    // nav active state (mirror behaviour from your dashboard)
+    document.querySelectorAll('.nav-item').forEach(i => {
+      i.addEventListener('click', (e) => {
+        document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active'));
+        i.classList.add('active');
+      });
+    });
+
+    // small enhancement — press "/" to focus search
+    window.addEventListener('keydown', (e) => {
+      if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        searchInput.focus();
+      }
+    });
+
+    // LOGOUT: redirect to index.html
+    document.getElementById('logoutBtn').addEventListener('click', function () {
+      if (!confirm('Are you sure you want to logout?')) return;
+      try { sessionStorage.clear(); } catch (err) { /* ignore */ }
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>
