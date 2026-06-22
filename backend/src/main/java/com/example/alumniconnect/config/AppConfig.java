@@ -27,8 +27,7 @@ public class AppConfig {
     @Bean
     public DataSource dataSource() {
         HikariDataSource ds = new HikariDataSource();
-        ds.setJdbcUrl("jdbc:mysql://localhost:3306/" + dbName + "?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC");
-        ds.setUsername(dbUser);
+        ds.setJdbcUrl(System.getenv().getOrDefault("MYSQL_URL", "jdbc:mysql://localhost:3306/" + dbName + "?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC"));        ds.setUsername(dbUser);
         ds.setPassword(dbPass);
         ds.setDriverClassName(driver);
         return ds;
