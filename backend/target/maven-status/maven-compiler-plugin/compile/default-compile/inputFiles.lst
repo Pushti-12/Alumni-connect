@@ -1,8 +1,8 @@
-C:\Users\sumee_bf7n\OneDrive\Desktop\projectzip_newest_pakka_final\backend\src\main\java\com\example\alumniconnect\config\SecurityConfig.java
-C:\Users\sumee_bf7n\OneDrive\Desktop\projectzip_newest_pakka_final\backend\src\main\java\com\example\alumniconnect\controller\ProfileController.java
-C:\Users\sumee_bf7n\OneDrive\Desktop\projectzip_newest_pakka_final\backend\src\main\java\com\example\alumniconnect\controller\AuthController.java
-C:\Users\sumee_bf7n\OneDrive\Desktop\projectzip_newest_pakka_final\backend\src\main\java\com\example\alumniconnect\config\AppConfig.java
-C:\Users\sumee_bf7n\OneDrive\Desktop\projectzip_newest_pakka_final\backend\src\main\java\com\example\alumniconnect\AlumniConnectApplication.java
-C:\Users\sumee_bf7n\OneDrive\Desktop\projectzip_newest_pakka_final\backend\src\main\java\com\example\alumniconnect\controller\UserController.java
-C:\Users\sumee_bf7n\OneDrive\Desktop\projectzip_newest_pakka_final\backend\src\main\java\com\example\alumniconnect\config\DatabaseInitializer.java
-C:\Users\sumee_bf7n\OneDrive\Desktop\projectzip_newest_pakka_final\backend\src\main\java\com\example\alumniconnect\controller\RequestsController.java
+/workspaces/Alumni-connect/backend/src/main/java/com/example/alumniconnect/controller/RequestsController.java
+/workspaces/Alumni-connect/backend/src/main/java/com/example/alumniconnect/config/DatabaseInitializer.java
+/workspaces/Alumni-connect/backend/src/main/java/com/example/alumniconnect/controller/AuthController.java
+/workspaces/Alumni-connect/backend/src/main/java/com/example/alumniconnect/config/AppConfig.java
+/workspaces/Alumni-connect/backend/src/main/java/com/example/alumniconnect/AlumniConnectApplication.java
+/workspaces/Alumni-connect/backend/src/main/java/com/example/alumniconnect/controller/ProfileController.java
+/workspaces/Alumni-connect/backend/src/main/java/com/example/alumniconnect/controller/UserController.java
+/workspaces/Alumni-connect/backend/src/main/java/com/example/alumniconnect/config/SecurityConfig.java
