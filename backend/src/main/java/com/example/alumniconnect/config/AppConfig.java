@@ -26,11 +26,18 @@ public class AppConfig {
 
     @Bean
     public DataSource dataSource() {
-        HikariDataSource ds = new HikariDataSource();
-        ds.setJdbcUrl(System.getenv().getOrDefault("MYSQL_URL", "jdbc:mysql://localhost:3306/" + dbName + "?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC"));        ds.setUsername(dbUser);
-        ds.setPassword(dbPass);
-        ds.setDriverClassName(driver);
-        return ds;
+    HikariDataSource ds = new HikariDataSource();
+    String dbUrl = System.getenv().getOrDefault("DATABASE_URL", 
+        "jdbc:postgresql://localhost:5432/alumni_connect");
+    // Render DATABASE_URL starts with "postgres://" fix it
+    if (dbUrl.startsWith("postgres://")) {
+        dbUrl = dbUrl.replace("postgres://", "jdbc:postgresql://");
+    }
+    ds.setJdbcUrl(dbUrl);
+    ds.setUsername(System.getenv().getOrDefault("PGUSER", "postgres"));
+    ds.setPassword(System.getenv().getOrDefault("PGPASSWORD", "postgres"));
+    ds.setDriverClassName("org.postgresql.Driver");
+    return ds;
     }
 
     @Bean
