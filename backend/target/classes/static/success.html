@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alumni Success Stories</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary-orange: #faf8f7;
+      --primary-blue: #1e40af;
+      --primary-green: #16a34a;
+      --secondary-gray: #f3f4f6;
+      --border-color: #e5e7eb;
+      --text-dark: #1f2937;
+      --text-light: #6b7280;
+      --white: #ffffff;
+      --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+      --accent: #00d4ff;
+      --accent-secondary: #ff6b35;
+      --text-secondary: #b0bec5;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #fafdff 0%, #f5f6f8 100%);
+      color: var(--text-dark);
+    }
+
+    .container {
+      display: flex;
+      min-height: 100vh;
+      background-color: var(--secondary-gray);
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 200px;
+      background: linear-gradient(135deg, var(--primary-orange) 0%, #5c68b6 100%);
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      color: var(--white);
+      box-shadow: var(--shadow-lg);
+      overflow-y: auto;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .logo-icon {
+      font-size: 32px;
+    }
+
+    .sidebar-header h1 {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 32px;
+      flex: 1;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      color: rgba(255, 255, 255, 0.8);
+      transition: all 0.3s ease;
+      font-size: 14px;
+    }
+
+    .nav-item:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+      color: var(--white);
+    }
+
+    .nav-item.active {
+      background-color: rgba(255, 255, 255, 0.25);
+      color: var(--white);
+      font-weight: 600;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: 0;
+    }
+
+    header {
+      background: rgba(50, 134, 195, 0.8);
+      backdrop-filter: blur(10px);
+      padding: 2rem 1rem;
+      text-align: center;
+      border-bottom: 2px solid var(--accent);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, var(--accent) 0%, #e0eaec 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 700;
+    }
+
+    header p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+    }
+
+    main {
+      padding: 2rem;
+      color: var(--white);
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .section-title h2 {
+      font-size: 1.8rem;
+      color: var(--accent);
+    }
+
+    .section-title p {
+      color: var(--text-secondary);
+    }
+
+    .stories-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .story-card {
+      background: linear-gradient(135deg, rgba(0, 31, 63, 0.8) 0%, rgba(0, 50, 100, 0.6) 100%);
+      border: 1px solid rgba(0, 212, 255, 0.2);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .story-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--accent);
+      box-shadow: 0 10px 25px rgba(0, 212, 255, 0.15);
+    }
+
+    .story-card img {
+      width: 100%;
+      height: 350px;
+      object-fit: cover;
+    }
+
+    .story-card-content {
+        height:
+      padding: 1.2rem;
+      color: var(--text-secondary);
+    }
+
+    .story-card-name {
+      font-size: 1.3rem;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .story-card-title {
+      font-size: 0.95rem;
+      color: var(--accent-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .badge {
+      background: rgba(0, 212, 255, 0.1);
+      color: var(--accent);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      border: 1px solid rgba(0, 212, 255, 0.3);
+      margin-right: 5px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      color: var(--text-secondary);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-icon">🎓</div>
+        <h1>Alumni<br>Portal</h1>
+      </div>
+
+      <nav class="nav-menu">
+      <a href="alumni-dashboard.html" class="nav-link nav-item active" data-target="overview">🏠 Overview</a>
+      <a href="alumni-network.html" class="nav-link nav-item" data-target="network">👥 Alumni Network</a>
+      <a href="alumni-opportunities.html" class="nav-link nav-item" data-target="opportunities">🤝 Opportunities & Collaborations</a>
+      <a href="alumni-events.html" class="nav-link nav-item" data-target="events">📅 Events & Reunions</a>
+      <a href="success.html" class="nav-item ">⭐ Success Stories</a>
+      <a href="requests_alumni.html" class="nav-item">📨 <span>Requests</span></a>
+      
+      <!-- account settings (in-page) -->
+    </nav>
+  </aside>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <header>
+        <h1>Alumni Success Stories</h1>
+        <p>Inspiring journeys of our graduates making an impact worldwide</p>
+      </header>
+
+      <main>
+        <section class="section-title">
+          <h2>Featured Alumni</h2>
+          <p>Discover the remarkable achievements of our alumni community</p>
+        </section>
+
+        <div class="stories-grid" id="storiesGrid"></div>
+      </main>
+
+      <footer>
+        <p>&copy; 2025 Alumni Success Stories. Celebrating our graduates' achievements worldwide.</p>
+      </footer>
+    </div>
+  </div>
+
+  <script>
+    const stories = [
+      {
+        name: "",
+        title: "",
+        description: "",
+        image: "alumni1.png",
+        tags: [""]
+      },
+      {
+                name: "",
+                title: "",
+                description: "",
+                category: "entrepreneurship",
+                image: "alumni5.png",
+                tags: [""]
+            },
+            {
+                name: "",
+                title: "",
+                description: "",
+                category: "entrepreneurship",
+                image: "alumni2.png",
+                tags: [""]
+            },
+            {
+                name: "",
+                title: "",
+                description: "",
+                category: "entrepreneurship",
+                image: "alumni3.png",
+                tags: [""]
+            },
+      {
+        name: "",
+        title: "",
+        description: "",
+        image: "alumni4.png",
+        tags: [""]
+      }
+      
+    ];
+
+    function createStoryCard(story) {
+      return `
+        <div class="story-card">
+          <img src="${story.image}" alt="${story.name}">
+          <div class="story-card-content">
+            <div class="story-card-name">${story.name}</div>
+            <div class="story-card-title">${story.title}</div>
+            <p>${story.description}</p>
+            <div>
+              ${story.tags.map(tag => `<span class="badge">${tag}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    document.getElementById('storiesGrid').innerHTML = stories.map(createStoryCard).join('');
+  </script>
+</body>
+</html>

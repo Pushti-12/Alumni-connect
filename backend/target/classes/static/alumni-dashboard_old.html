@@ -1,0 +1,136 @@
+<!-- save as alumni-dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Alumni Connect — Dashboard</title>
+  <style>
+    :root{
+      --bg:#f3f4f6; --card:#fff; --muted:#64748b; --accent:#5c68b6;
+      --sidebar-grad: linear-gradient(135deg,#faf8f7 0%, #5c68b6 100%);
+      --border:#e5e7eb; --shadow: 0 6px 18px rgba(15,23,42,0.06);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family: "Segoe UI", Roboto, Arial, sans-serif;background:var(--bg);color:#111827;min-height:100vh}
+    
+    /* sidebar */
+    .sidebar{
+      position:fixed;left:0;top:0;bottom:0;width:220px;padding:24px;
+      background:var(--sidebar-grad);color:#fff;box-shadow:var(--shadow);overflow:auto;
+    }
+    main{margin-left:220px;padding:28px}
+
+    .nav{margin-top:22px;display:flex;flex-direction:column;gap:8px}
+    .nav a{
+      display:flex;align-items:center;gap:10px;
+      padding:10px;border-radius:8px;text-decoration:none;
+      color:rgba(255,255,255,0.95)
+    }
+    .nav a.active{background:rgba(0,0,0,0.12);font-weight:700}
+
+    /* content */
+    .topbar{margin-bottom:18px}
+    .card{
+      background:var(--card);border-radius:12px;padding:18px;
+      border:1px solid var(--border);box-shadow:var(--shadow)
+    }
+    .grid{
+      display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+      gap:16px;margin-top:12px
+    }
+    .small{color:var(--muted);font-size:13px}
+
+    @media (max-width:820px){
+      .sidebar{position:relative;width:100%;flex-direction:row;padding:12px 16px}
+      .nav{flex-direction:row;overflow:auto}
+      main{margin-left:0;padding:16px}
+    }
+  </style>
+</head>
+
+<body>
+  <aside class="sidebar">
+    <div style="display:flex;gap:12px;align-items:center">
+      <div style="font-size:28px">🎓</div>
+      <div>
+        <h1 style="font-size:16px;margin:0">Alumni Connect</h1>
+        <div class="small">Connect · Mentor · Give back</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <a href="alumni-dashboard.html" class="active">🏠 Overview</a>
+      <a href="alumni-network.html">👥 Alumni Network</a>
+      <a href="alumni-opportunities.html">🤝 Opportunities & Collaborations</a>
+      <a href="alumni-events.html">📅 Events & Reunions</a>
+    </nav>
+
+    <div style="margin-top:22px">
+      <button id="logoutBtn" style="width:100%;padding:10px;border-radius:10px;border:none;background:#fff;color:var(--accent);font-weight:700;cursor:pointer">Logout 🚪</button>
+    </div>
+  </aside>
+
+  <main>
+    <!-- top heading only, search removed -->
+    <div class="topbar">
+      <h2 style="margin:0">Welcome to Alumni Connect</h2>
+      <div class="small">Coordinate initiatives, mentor students, and stay connected.</div>
+    </div>
+
+    <!-- quick actions -->
+    <section class="card">
+      <h3 style="margin:0 0 8px 0">Top alumni actions</h3>
+
+      <div class="grid">
+        <div style="padding:12px;border-radius:10px;background:linear-gradient(90deg,#eef2ff,#ffffff)">
+          <strong>Mentorship Requests</strong>
+          <div class="small">Guide current students & junior alumni.</div>
+          <a href="alumni-network.html" style="color:var(--accent);text-decoration:none;margin-top:8px;display:inline-block">Manage mentees →</a>
+        </div>
+
+        <div style="padding:12px;border-radius:10px;background:linear-gradient(90deg,#fff7ed,#ffffff)">
+          <strong>Opportunities & Partnerships</strong>
+          <div class="small">Share collaborations, fellowships, sponsorships.</div>
+          <a href="alumni-opportunities.html" style="color:var(--accent);text-decoration:none;margin-top:8px;display:inline-block">Explore →</a>
+        </div>
+
+        <div style="padding:12px;border-radius:10px;background:linear-gradient(90deg,#eefde7,#ffffff)">
+          <strong>Reunions & Events</strong>
+          <div class="small">Plan reunions and connect with alumni batches.</div>
+          <a href="alumni-events.html" style="color:var(--accent);text-decoration:none;margin-top:8px;display:inline-block">Manage events →</a>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-top:18px">
+      <h3 style="margin:0">Recent activity</h3>
+      <div class="small">Latest highlights from alumni</div>
+
+      <div class="grid" style="margin-top:12px">
+        <div class="card">
+          <strong>New mentorship cohort launched</strong>
+          <div class="small" style="margin-top:6px">20 mentees joined under alumni volunteers</div>
+        </div>
+
+        <div class="card">
+          <strong>Industry collaboration added</strong>
+          <div class="small" style="margin-top:6px">Tek Inspiration joins as a project partner</div>
+        </div>
+
+        <div class="card">
+          <strong>Reunion scheduled</strong>
+          <div class="small" style="margin-top:6px">Class of 2014 – December 12, 2025</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      if(confirm("Logout?")) window.location.href = "index.html";
+    });
+  </script>
+
+</body>
+</html>

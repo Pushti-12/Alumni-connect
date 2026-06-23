@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Login — Alumni Connect</title>
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#98a0b3;
+      --accent:#6ee7b7;
+      --accent-2:#60a5fa;
+      --danger:#ff6b6b;
+      --glass: rgba(255,255,255,0.03);
+      --radius:14px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: linear-gradient(180deg,#071024 0%, #061124 100%);
+      color:#e6eef8;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:32px;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+    .container{ width:100%; max-width:520px; }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius: var(--radius);
+      padding:22px;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.03);
+      backdrop-filter: blur(6px);
+    }
+    .brand{ display:flex; gap:12px; align-items:center; margin-bottom:18px; }
+    .logo{ width:46px; height:46px; border-radius:10px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); display:flex; align-items:center; justify-content:center; font-weight:700; color:#05222a; font-size:18px; }
+    h1{ margin:0; font-size:18px; letter-spacing:0.2px; }
+    p.lead{ margin:6px 0 14px 0; color:var(--muted); font-size:13px; }
+
+    .segmented{ display:flex; gap:6px; background:var(--glass); padding:6px; border-radius:999px; width:100%; margin-bottom:14px; }
+    .segmented button{ flex:1; padding:10px 12px; background:transparent; border:0; color:var(--muted); font-weight:600; border-radius:999px; cursor:pointer; transition: all .16s ease; }
+    .segmented button[aria-pressed="true"]{ background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#021426; box-shadow: 0 6px 18px rgba(96,165,250,0.12); }
+
+    form { display:flex; flex-direction:column; gap:10px; }
+    label { font-size:13px; color:var(--muted); display:block; margin-bottom:6px; }
+    .input{ display:flex; align-items:center; gap:8px; background: rgba(255,255,255,0.02); border-radius:10px; padding:10px 12px; border: 1px solid rgba(255,255,255,0.03); }
+    input[type="text"], input[type="password"], input[type="email"], input[type="date"]{ background:transparent; border:0; outline:0; color: #e6eef8; font-size:14px; width:100%; }
+    select { background:transparent; border:0; color: #e6eef8; width:100%; }
+
+    .small { font-size:13px; color:var(--muted); }
+
+    .row { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+    .actions{ margin-top:6px; display:flex; gap:12px; align-items:center; }
+    .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 14px; border-radius:10px; border:0; cursor:pointer; font-weight:700; font-size:14px; }
+    .btn-primary{ background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#021426; box-shadow: 0 10px 20px rgba(110,231,183,0.08); flex:1; }
+    .btn-ghost{ background: transparent; color:var(--muted); border: 1px solid rgba(255,255,255,0.03); padding:9px 12px; }
+
+    .helper{ display:flex; align-items:center; gap:10px; color:var(--muted); font-size:13px; }
+    .error { color:var(--danger); font-size:13px; margin-top:6px; }
+    .hint { font-size:12px; color:var(--muted); margin-top:6px; }
+
+    .signup { margin-top: 12px; text-align:center; }
+    .signup a { color: var(--accent-2); font-weight: 600; text-decoration: none; cursor:pointer; }
+
+    .panel { margin-top:12px; }
+    .hidden { display:none; }
+    footer.small { margin-top:16px; font-size:12px; color:var(--muted); text-align:center; }
+
+    /* Forgot modal */
+    #forgotModal{ display:none; position:fixed; inset:0; align-items:center; justify-content:center; background:rgba(2,6,23,0.6); z-index:1200; }
+    #forgotModal .modalCard{ width:100%; max-width:520px; background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border-radius:12px; padding:18px; border:1px solid rgba(255,255,255,0.03); box-shadow:0 20px 50px rgba(2,6,23,0.7); }
+    #forgotModal .modalCard input { background:transparent; color:#e6eef8; border:1px solid rgba(255,255,255,0.03); padding:10px; border-radius:8px; }
+
+    @media (max-width:460px){ .card{padding:18px} #forgotModal .modalCard{margin:12px} }
+  </style>
+</head>
+<body>
+  <div class="container" role="main">
+    <div class="card" aria-labelledby="loginHeading">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">AC</div>
+        <div>
+          <h1 id="loginHeading">Alumni Connect</h1>
+          <p class="lead" id="leadText">Sign in to your account (Student or Alumni)</p>
+        </div>
+      </div>
+
+      <!-- segmented control for account type (used by both login & signup) -->
+      <div class="segmented" role="tablist" aria-label="Account Type">
+        <button id="type-student" role="tab" aria-pressed="true" data-type="student">Student</button>
+        <button id="type-alumni" role="tab" aria-pressed="false" data-type="alumni">Alumni</button>
+      </div>
+
+      <!-- LOGIN PANEL -->
+      <div class="panel" id="loginPanel">
+        <form id="loginForm" novalidate>
+          <div>
+            <label for="username">Username or email</label>
+            <div class="input">
+              <input id="username" name="username" type="text" autocomplete="username" placeholder="you@example.com" required />
+            </div>
+          </div>
+
+          <div>
+            <label for="password">Password</label>
+            <div class="input" style="justify-content:space-between">
+              <input id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required />
+              <button type="button" id="togglePassword" aria-label="Show password" class="btn-ghost" style="margin-left:8px">Show</button>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="helper">
+              <input id="remember" name="remember" type="checkbox" />
+              <label for="remember" class="small">Remember me</label>
+            </div>
+            <a href="#" class="small" id="forgotLink">Forgot password?</a>
+          </div>
+
+          <div id="loginError" class="error" role="alert" aria-live="polite" hidden></div>
+
+          <div class="actions">
+            <button type="submit" class="btn btn-primary" id="loginBtn">Sign in</button>
+            <button type="button" class="btn btn-ghost" id="demoBtn">Demo</button>
+          </div>
+
+          <div class="signup">
+            <span class="small">Don't have an account?</span>
+            <a id="openSignup" class="small">Sign up</a>
+          </div>
+
+          <p class="hint" id="endpointHint">Logging in as <strong id="currentType">Student</strong>.</p>
+        </form>
+      </div>
+
+      <footer class="small">If you're an instructor or vendor, use the vendor login on the dashboard page.</footer>
+    </div>
+  </div>
+
+  <!-- Forgot password modal -->
+  <div id="forgotModal" aria-hidden="true">
+    <div class="modalCard" role="dialog" aria-modal="true" aria-labelledby="fpTitle">
+      <h3 id="fpTitle" style="margin:0 0 8px 0;color:#e6eef8">Forgot password</h3>
+      <p style="margin:0 0 12px 0;color:#98a0b3;font-size:13px">Provide your username and your birthday (security question). If verified you can set a new password.</p>
+
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <input id="fpUsername" placeholder="you@example.com" />
+        <label style="color:#98a0b3;font-size:13px;margin-top:6px">Your birthday (security answer)</label>
+        <input id="fpBirthday" type="date" />
+
+        <div id="fpStep1Controls" style="display:flex;gap:8px;margin-top:6px">
+          <button id="fpVerify" class="btn btn-primary">Verify</button>
+          <button id="fpCancel" class="btn btn-ghost">Cancel</button>
+        </div>
+
+        <div id="fpResetSection" style="display:none;flex-direction:column;gap:8px;margin-top:8px">
+          <input id="fpNewPassword" type="password" placeholder="New password" />
+          <div style="display:flex;gap:8px">
+            <button id="fpResetBtn" class="btn" style="background:#10b981;color:#021426">Set new password</button>
+            <button id="fpCancel2" class="btn btn-ghost">Cancel</button>
+          </div>
+        </div>
+
+        <div id="fpError" style="color:#ff6b6b;font-size:13px;margin-top:6px;display:none"></div>
+        <div id="fpMsg" style="color:#9ae6b4;font-size:13px;margin-top:6px;display:none"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      // Change this if your backend runs somewhere else
+      const API_BASE = "http://127.0.0.1:5000";
+
+      // Elements
+      const studentBtn = document.getElementById('type-student');
+      const alumniBtn = document.getElementById('type-alumni');
+      const currentTypeEl = document.getElementById('currentType');
+      const loginPanel = document.getElementById('loginPanel');
+      const openSignup = document.getElementById('openSignup');
+      const leadText = document.getElementById('leadText');
+
+      // login fields
+      const loginForm = document.getElementById('loginForm');
+      const username = document.getElementById('username');
+      const password = document.getElementById('password');
+      const loginError = document.getElementById('loginError');
+      const loginBtn = document.getElementById('loginBtn');
+
+      // demo & toggles
+      const togglePassword = document.getElementById('togglePassword');
+
+      let accountType = 'student'; // default
+
+      function setType(type){
+        accountType = type;
+        studentBtn.setAttribute('aria-pressed', type === 'student');
+        alumniBtn.setAttribute('aria-pressed', type === 'alumni');
+        currentTypeEl.textContent = type.charAt(0).toUpperCase() + type.slice(1);
+      }
+
+      // segmented control
+      studentBtn.addEventListener('click', ()=> setType('student'));
+      alumniBtn.addEventListener('click', ()=> setType('alumni'));
+
+      // toggle password visibility
+      togglePassword.addEventListener('click', ()=> {
+        password.type = (password.type === 'password' ? 'text' : 'password');
+        togglePassword.textContent = (password.type === 'password' ? 'Show' : 'Hide');
+      });
+
+      // open signup page (standalone)
+      openSignup.addEventListener('click', (e) => { e.preventDefault(); window.location.href = 'signup.html'; });
+
+      // Demo button to prefill fields
+      document.getElementById('demoBtn').addEventListener('click', ()=>{
+        if(accountType === 'student'){
+          username.value = 'student@example.com';
+          password.value = 'StudentPass123';
+        } else {
+          username.value = 'alumni@example.com';
+          password.value = 'AlumniPass123';
+        }
+      });
+
+      // LOGIN submit
+      loginForm.addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        loginError.hidden = true;
+        loginError.textContent = '';
+
+        const payload = {
+          username: username.value.trim(),
+          password: password.value,
+          accountType: accountType
+        };
+        if(!payload.username || !payload.password){
+          loginError.textContent = "Enter username and password.";
+          loginError.hidden = false;
+          return;
+        }
+
+        loginBtn.disabled = true;
+        loginBtn.textContent = "Signing in...";
+
+        try {
+          const res = await fetch(API_BASE + '/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          // safe parse
+          let body;
+          try { body = await res.json(); } catch (err) { body = null; }
+
+          if(!res.ok){
+            const message = body && (body.error || body.message) ? (body.error || body.message) : 'Login failed.';
+            loginError.textContent = message;
+            loginError.hidden = false;
+            return;
+          }
+
+          // SUCCESS
+          const userObj = (body && body.user) ? body.user : {};
+          alert('Login successful — welcome, ' + (userObj.fullName || userObj.username));
+
+          // store user object and helpers
+          try {
+            const storage = document.getElementById('remember').checked ? localStorage : sessionStorage;
+            storage.setItem('alumni_user', JSON.stringify(userObj));
+            if (userObj && (userObj.id || userObj.user_id)) {
+              const uid = userObj.id || userObj.user_id;
+              storage.setItem('userId', String(uid));
+            }
+            const acct = (userObj.accountType || userObj.account_type || accountType).toString();
+            storage.setItem('accountType', acct);
+          } catch (errStorage) { console.warn('Storage error', errStorage); }
+
+          // Redirect
+          const acctLower = (userObj.accountType || userObj.account_type || "").toLowerCase();
+          if (acctLower === "student") window.location.href = "dashboard.html";
+          else if (acctLower === "alumni") window.location.href = "alumni-dashboard.html";
+          else window.location.href = "dashboard.html";
+        } catch(err){
+          console.error(err);
+          loginError.textContent = 'Network error — cannot reach server.';
+          loginError.hidden = false;
+        } finally {
+          loginBtn.disabled = false;
+          loginBtn.textContent = "Sign in";
+        }
+      });
+
+      // --- Forgot password modal behaviour ---
+      (function () {
+        const API = API_BASE;
+        const forgotLink = document.getElementById('forgotLink');
+        const forgotModal = document.getElementById('forgotModal');
+        if (!forgotLink || !forgotModal) return;
+
+        const fpUsername = document.getElementById('fpUsername');
+        const fpBirthday = document.getElementById('fpBirthday');
+        const fpVerify = document.getElementById('fpVerify');
+        const fpCancel = document.getElementById('fpCancel');
+        const fpResetSection = document.getElementById('fpResetSection');
+        const fpNewPassword = document.getElementById('fpNewPassword');
+        const fpResetBtn = document.getElementById('fpResetBtn');
+        const fpCancel2 = document.getElementById('fpCancel2');
+        const fpError = document.getElementById('fpError');
+        const fpMsg = document.getElementById('fpMsg');
+
+        function showForgot(show) {
+          forgotModal.style.display = show ? 'flex' : 'none';
+          forgotModal.setAttribute('aria-hidden', show ? 'false' : 'true');
+          if (show) {
+            fpUsername.value = '';
+            fpBirthday.value = '';
+            fpNewPassword.value = '';
+            fpResetSection.style.display = 'none';
+            fpError.style.display = 'none';
+            fpMsg.style.display = 'none';
+          }
+        }
+
+        forgotLink.addEventListener('click', (e) => {
+          e.preventDefault();
+          showForgot(true);
+        });
+
+        fpCancel.addEventListener('click', () => showForgot(false));
+        fpCancel2.addEventListener('click', () => showForgot(false));
+
+        fpVerify.addEventListener('click', async () => {
+          fpError.style.display = 'none'; fpMsg.style.display = 'none';
+          const usernameVal = (fpUsername.value || '').trim();
+          const birthdayVal = (fpBirthday.value || '').trim();
+          if (!usernameVal || !birthdayVal) {
+            fpError.textContent = 'Provide username and birthday.';
+            fpError.style.display = 'block';
+            return;
+          }
+          fpVerify.disabled = true;
+          fpVerify.textContent = 'Checking...';
+          try {
+            const res = await fetch(API + '/api/auth/verify_security', {
+              method: 'POST',
+              headers: {'Content-Type':'application/json'},
+              body: JSON.stringify({ username: usernameVal, birthday: birthdayVal })
+            });
+            const body = await res.json().catch(()=>null);
+            if (!res.ok) {
+              fpError.textContent = (body && (body.error||body.message)) || 'Verification failed';
+              fpError.style.display = 'block';
+              return;
+            }
+            fpResetSection.style.display = 'flex';
+            fpMsg.textContent = 'Verified. Enter a new password below.';
+            fpMsg.style.display = 'block';
+          } catch (err) {
+            fpError.textContent = 'Network error — try again.';
+            fpError.style.display = 'block';
+          } finally {
+            fpVerify.disabled = false;
+            fpVerify.textContent = 'Verify';
+          }
+        });
+
+        fpResetBtn.addEventListener('click', async () => {
+          fpError.style.display = 'none'; fpMsg.style.display = 'none';
+          const usernameVal = (fpUsername.value || '').trim();
+          const newPassword = (fpNewPassword.value || '').trim();
+          if (!usernameVal || !newPassword) {
+            fpError.textContent = 'Enter a new password.';
+            fpError.style.display = 'block';
+            return;
+          }
+          fpResetBtn.disabled = true;
+          fpResetBtn.textContent = 'Saving...';
+          try {
+            const res = await fetch(API + '/api/auth/reset_password', {
+              method: 'POST',
+              headers: {'Content-Type':'application/json'},
+              body: JSON.stringify({ username: usernameVal, newPassword })
+            });
+            const body = await res.json().catch(()=>null);
+            if (!res.ok) {
+              fpError.textContent = (body && (body.error||body.message)) || 'Reset failed';
+              fpError.style.display = 'block';
+              return;
+            }
+            fpMsg.textContent = 'Password reset successful — you can now sign in.';
+            fpMsg.style.display = 'block';
+            setTimeout(()=> { showForgot(false); }, 1200);
+          } catch (err) {
+            fpError.textContent = 'Network error — try again.';
+            fpError.style.display = 'block';
+          } finally {
+            fpResetBtn.disabled = false;
+            fpResetBtn.textContent = 'Set new password';
+          }
+        });
+
+      })();
+
+      // Initialize default state
+      setType(accountType);
+    })();
+  </script>
+</body>
+</html>

@@ -7,6 +7,9 @@ services:
     envVars:
       - key: PORT
         value: "5000"
+    databases:
+      - name: alumni-connect-db
+        envVarName: DATABASE_URL
 
   - type: postgres
     name: alumni-connect-db

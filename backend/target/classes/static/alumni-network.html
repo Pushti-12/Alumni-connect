@@ -1,0 +1,176 @@
+<!-- save as alumni-network.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Alumni Connect — Network</title>
+  <style>
+    :root{--bg:#f3f4f6;--accent:#5c68b6;--muted:#64748b;--sidebar-grad: linear-gradient(135deg,#faf8f7 0%, #5c68b6 100%);--border:#e5e7eb;--shadow:0 6px 18px rgba(15,23,42,0.06)}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:"Segoe UI",sans-serif;background:var(--bg);color:#111827;min-height:100vh}
+    .sidebar{position:fixed;left:0;top:0;bottom:0;width:220px;padding:24px;background:var(--sidebar-grad);color:#fff;box-shadow:var(--shadow);overflow:auto}
+    main{margin-left:220px;padding:28px}
+    .search{padding:8px 12px;border-radius:10px;border:1px solid var(--border);width:360px}
+    .filters{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+    .profiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;margin-top:20px}
+    .card{background:#fff;padding:18px;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow);text-align:center}
+    .avatar{width:72px;height:72px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1e40af,#16a34a);color:#fff;font-weight:700;font-size:20px;margin-bottom:12px}
+    .btn{padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:700}
+    .btn-primary{background:var(--accent);color:#fff}
+    .small{color:var(--muted);font-size:13px}
+    @media (max-width:820px){.sidebar{position:relative;width:100%}main{margin-left:0}}
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div style="display:flex;gap:12px;align-items:center">
+      <div style="font-size:28px">🎓</div>
+      <div>
+        <div style="font-weight:700">Alumni Connect</div>
+        <div class="small">Directory & Mentorship</div>
+      </div>
+    </div>
+
+    <nav style="margin-top:18px;display:flex;flex-direction:column;gap:8px">
+      <a href="alumni-dashboard.html" style="color:#fff;text-decoration:none">🏠 Overview</a>
+      <a href="alumni-network.html" style="color:#fff;text-decoration:none;font-weight:700">👥 Network</a>
+      <a href="alumni-opportunities.html" style="color:#fff;text-decoration:none">🤝 Opportunities</a>
+      <a href="alumni-events.html" style="color:#fff;text-decoration:none">📅 Events</a>
+      <a href="success.html" class="nav-item ">⭐ Success Stories</a>
+    </nav>
+
+    <div style="margin-top:22px"><button id="logoutBtn" style="width:100%;padding:10px;border-radius:10px;border:none;background:#fff;color:var(--accent);font-weight:700">Logout 🚪</button></div>
+  </aside>
+
+  <main>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <h2 style="margin:0">Alumni Directory</h2>
+        <div class="small">Search by name, company, batch or expertise. Offer mentorship or collaboration.</div>
+      </div>
+      <input class="search" id="search" placeholder="Search alumni (name/company/skill)"/>
+    </div>
+
+    <div class="filters">
+      <button class="btn" id="filterMentors">Mentors</button>
+      <button class="btn" id="filterByCompany">By company</button>
+      <button class="btn" id="filterByBatch">By batch</button>
+    </div>
+
+    <div class="profiles" id="profiles">
+      <!-- cards will be rendered here -->
+    </div>
+  </main>
+
+  <script>
+    (function(){
+      // Update if your backend is on a different host/port
+      const API_BASE = "http://127.0.0.1:5000";
+
+      const profilesEl = document.getElementById('profiles');
+      const searchInput = document.getElementById('search');
+
+      // Escape HTML helper
+      function escapeHtml(s){
+        if(s === null || s === undefined) return '';
+        return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]);
+      }
+
+      // Render one alumni card using same markup/style as original,
+      // plus email and Connect button that links to requests_student.html
+      function renderCard(al) {
+        // Name fallback
+        const name = al.name || al.username || '—';
+        const initials = (name.split(' ').map(p => p[0]).slice(0,2).join('') || name.slice(0,2)).toUpperCase();
+
+        // Subheading: prefer "current_job · company" then company then department
+        let sub = '';
+        if (al.current_job && al.company) sub = `${al.current_job} · ${al.company}`;
+        else if (al.company) sub = `${al.company}`;
+        else if (al.current_job) sub = `${al.current_job}`;
+        else if (al.department) sub = `${al.department}`;
+        else sub = '';
+
+        const batch = al.batch ? `<div class="small" style="margin-top:6px">Batch ${escapeHtml(al.batch)}</div>` : '';
+        const emailLine = al.username ? `<div class="small" style="margin-top:8px">📧 ${escapeHtml(al.username)}</div>` : '';
+
+        // Connect button will navigate to requests_student.html with recipient info in querystring
+        // We include both recipient_id and recipient_username for flexibility
+
+
+        return `
+          <div class="card" data-id="${al.id || ''}">
+            <div class="avatar">${escapeHtml(initials)}</div>
+            <h3 style="margin:6px 0">${escapeHtml(name)}</h3>
+            <div class="small">${escapeHtml(sub)}</div>
+            ${emailLine}
+            ${batch}
+            ${btn}
+          </div>
+        `;
+      }
+
+      // Fetch alumni from backend with optional query
+      async function loadAlumni(query) {
+        profilesEl.innerHTML = '<div class="card">Loading…</div>';
+        try {
+          const qparam = query ? '?q=' + encodeURIComponent(query) : '';
+          const res = await fetch(API_BASE + '/api/alumni' + qparam, { method: 'GET' });
+          if (!res.ok) {
+            const txt = await res.text();
+            throw new Error(txt || ('Server returned ' + res.status));
+          }
+          const body = await res.json();
+          const list = body.alumni || [];
+          if (!list.length) {
+            profilesEl.innerHTML = '<div class="card"><em>No alumni found.</em></div>';
+            return;
+          }
+          profilesEl.innerHTML = list.map(renderCard).join('');
+        } catch (err) {
+          profilesEl.innerHTML = `<div class="card" style="color:#b91c1c">Error loading alumni: ${escapeHtml(err.message || err)}</div>`;
+          console.error(err);
+        }
+      }
+
+      // initial load
+      loadAlumni('');
+
+      // search behaviour (debounced)
+      let timer = null;
+      searchInput.addEventListener('input', (e)=>{
+        const q = e.target.value.trim();
+        clearTimeout(timer);
+        timer = setTimeout(()=> loadAlumni(q), 300);
+      });
+
+      // Handle clicks for Connect buttons (event delegation)
+      profilesEl.addEventListener('click', function(evt){
+        const btn = evt.target.closest('.connect-btn');
+        if (!btn) return;
+        const recipientId = btn.getAttribute('data-id') || '';
+        const recipientUsername = btn.getAttribute('data-username') || '';
+        // build query string (prefer id if present)
+        const params = new URLSearchParams();
+        if (recipientId) params.set('recipient_id', recipientId);
+        if (recipientUsername) params.set('recipient_username', recipientUsername);
+        // open requests_student.html with params so that page can prefill recipient
+        window.location.href = 'requests_student.html?' + params.toString();
+      });
+
+      // demo filters still show alerts (keeps your original behaviour)
+      document.getElementById('filterMentors').addEventListener('click', ()=> alert('Filter mentors — demo'));
+      document.getElementById('filterByCompany').addEventListener('click', ()=> alert('Filter by company — demo'));
+      document.getElementById('filterByBatch').addEventListener('click', ()=> alert('Filter by batch — demo'));
+
+      // logout behaviour preserved
+      document.getElementById('logoutBtn').addEventListener('click', ()=> {
+        if (!confirm('Logout?')) return;
+        try { sessionStorage.clear(); } catch(e){}
+        window.location.href = 'index.html';
+      });
+    })();
+  </script>
+</body>
+</html>
