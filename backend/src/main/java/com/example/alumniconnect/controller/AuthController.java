@@ -40,10 +40,10 @@ public class AuthController {
 
         String hashed = BCrypt.hashpw(password, BCrypt.gensalt());
 
-        jdbc.update("INSERT INTO users (username, password_hash, account_type, full_name, security_answer) VALUES (?, ?, ?, ?, ?)",
+        Integer userId = jdbc.queryForObject(
+                "INSERT INTO users (username, password_hash, account_type, full_name, security_answer) VALUES (?, ?, ?, ?, ?) RETURNING id",
+                Integer.class,
                 username, hashed, accountType, fullName, securityAnswer);
-
-        Integer userId = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
 
         jdbc.update(
             "INSERT INTO profiles (user_id, first_name, last_name, phone, batch, grad_year, department, course, current_job, company, organization, experience, certificates) VALUES (?, '', '', '', '', '', '', '', '', '', '', '', '')",

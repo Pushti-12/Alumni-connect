@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Alumni Portal - Connect & Network</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    :root {
+      --primary-orange: #faf8f7;
+      --primary-blue: #1e40af;
+      --primary-green: #16a34a;
+      --secondary-gray: #f3f4f6;
+      --border-color: #e5e7eb;
+      --text-dark: #1f2937;
+      --text-light: #6b7280;
+      --white: #ffffff;
+      --shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+      --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9fafb;
+      color: var(--text-dark);
+    }
+    .container {
+      display: flex;
+      height: 100vh;
+      background-color: var(--secondary-gray);
+    }
+    .sidebar {
+      width: 200px;
+      background: linear-gradient(135deg, var(--primary-orange) 0%, #5c68b6 100%);
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      color: var(--white);
+      box-shadow: var(--shadow-lg);
+      overflow-y: auto;
+    }
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    }
+    .logo-icon { font-size: 32px; }
+    .sidebar-header h1 { font-size: 18px; font-weight: 700; line-height: 1.2; }
+    .nav-menu { display:flex; flex-direction:column; gap:8px; margin-bottom:32px; flex:1; }
+    .nav-item { display:flex; align-items:center; gap:12px; padding:12px 16px; border-radius:8px; text-decoration:none; color:rgba(255,255,255,0.8); transition:all .3s ease; font-size:14px; cursor:pointer; border:none; background:none; font-family:inherit; }
+    .nav-item:hover { background-color: rgba(255, 255, 255, 0.15); color: var(--white); }
+    .nav-item.active { background-color: rgba(255,255,255,0.25); color: var(--white); font-weight:600; }
+    .org-section { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.2); }
+    .org-section h3 { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; opacity:0.7; margin-bottom:12px; }
+    .logout-btn { display:flex; align-items:center; gap:12px; width:100%; padding:12px 16px; background-color: rgba(0,0,0,0.2); color: var(--white); border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; transition:all .3s ease; }
+    .logout-btn:hover { background-color: rgba(0,0,0,0.3); transform: translateY(-2px); }
+    .main-content { flex:1; display:flex; flex-direction:column; overflow-y:auto; }
+    .header { background-color: var(--white); border-bottom: 1px solid var(--border-color); padding: 0; }
+    .progress-bar { height:4px; background: linear-gradient(90deg, var(--primary-green) 0%, var(--primary-blue) 50%, var(--primary-orange) 100%); }
+    .header-top { display:flex; align-items:center; justify-content:space-between; padding:16px 32px; gap:16px; }
+    .search-box { flex:1; max-width:400px; padding:10px 16px; border:1px solid var(--border-color); border-radius:8px; font-size:14px; transition:all .3s ease; }
+    .header-actions { display:flex; align-items:center; gap:16px; margin-left:880px; }
+    .icon-btn { background:none; border:none; font-size:20px; cursor:pointer; transition:transform .2s ease; }
+    .icon-btn:hover { transform: scale(1.1); }
+    .user-avatar { display:flex; align-items:center; justify-content:center; width:40px; height:40px; background: linear-gradient(135deg, var(--primary-blue), var(--primary-green)); border-radius:50%; color:var(--white); font-weight:600; font-size:12px; }
+    .content { flex:1; padding:32px; overflow-y:auto; }
+    .section { margin-bottom:48px; }
+    .section-header { margin-bottom:32px; }
+    .section-title { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+    .section-title .icon { font-size:28px; }
+    .section-title h2 { font-size:24px; font-weight:700; color:var(--text-dark); }
+    .section-description { color: var(--text-light); font-size:14px; margin-bottom:20px; }
+    .profiles-grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap:24px; }
+    .profile-card { background-color:var(--white); border-radius:12px; padding:24px; text-align:center; box-shadow:var(--shadow); transition:all .3s ease; border:1px solid var(--border-color); cursor: pointer; }
+    .profile-card:hover { transform: translateY(-8px); box-shadow:var(--shadow-lg); border-color:var(--primary-blue); }
+    .profile-avatar { width:80px; height:80px; border-radius:50%; background: linear-gradient(135deg, var(--primary-blue), var(--primary-green)); display:flex; align-items:center; justify-content:center; color:var(--white); font-weight:700; font-size:24px; margin:0 auto 16px; }
+    .profile-avatar.bg-green { background: linear-gradient(135deg,#10b981,#059669); }
+    .profile-card h3 { font-size:18px; font-weight:700; margin-bottom:8px; color:var(--text-dark); }
+    .profile-card .role { font-size:13px; color:var(--text-light); margin-bottom:6px; }
+    .profile-card .location { font-size:13px; color:var(--text-light); margin-bottom:20px; }
+    .btn { padding:10px 16px; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; transition:all .3s ease; display:flex; align-items:center; justify-content:center; gap:6px; width:100%; }
+    .btn-primary { background-color: var(--primary-blue); color: var(--white); }
+    .btn-primary:hover { background-color:#1e3a8a; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(30,64,175,0.3); }
+    .btn-secondary { background-color: var(--primary-green); color:var(--white); }
+    .btn-secondary:hover { background-color:#15803d; transform:translateY(-2px); box-shadow: 0 4px 12px rgba(22,163,74,0.3); }
+    .modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background-color: rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center; }
+    .modal.active { display:flex; }
+    .modal-content { background-color:var(--white); border-radius:12px; padding:32px; max-width:500px; width:90%; box-shadow:var(--shadow-lg); position:relative; }
+    .modal-close { position:absolute; top:16px; right:16px; background:none; border:none; font-size:24px; cursor:pointer; color:var(--text-light); }
+    .modal-close:hover { color:var(--text-dark); }
+    .modal-content h2 { font-size:20px; font-weight:700; margin-bottom:12px; color:var(--text-dark); }
+    .modal-content p { color:var(--text-light); font-size:14px; margin-bottom:24px; }
+    .form-group { margin-bottom:20px; }
+    .form-group label { display:block; font-size:13px; font-weight:600; margin-bottom:8px; color:var(--text-dark); }
+    .form-group textarea { width:100%; padding:10px 12px; border:1px solid var(--border-color); border-radius:6px; font-family:inherit; font-size:14px; resize:vertical; transition:all .3s ease; }
+    .form-actions { display:flex; gap:12px; justify-content:flex-end; }
+    .form-actions .btn { flex:0 1 auto; width:auto; padding:10px 24px; }
+    @media (max-width:768px) {
+      .container { flex-direction: column; }
+      .sidebar { width:100%; flex-direction:row; overflow-x:auto; height:auto; }
+      .sidebar-header { margin-bottom:0; border-bottom:none; }
+      .nav-menu { display:flex; flex-direction:row; gap:8px; margin-bottom:0; flex:none; }
+      .org-section { display:none; }
+      .logout-btn { display:none; }
+      .header-top { flex-direction:column; align-items:stretch; }
+      .search-box { max-width:100%; }
+      .content { padding:20px; }
+      .profiles-grid { grid-template-columns:1fr; }
+      .section-title h2 { font-size:20px; }
+      .modal-content { width:95%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="logo-icon">🎓</div>
+        <h1>Alumni<br>Portal</h1>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="dashboard.html" class="nav-item">
+          <span class="icon">🏠</span>
+          <span>Dashboard</span>
+        </a>
+
+        <a href="#networking" class="nav-item active">
+          <span class="icon">👥</span>
+          <span>Networking Hub</span>
+        </a>
+
+        <!-- Changed: now points to job-portal.html -->
+        <a href="job-portal.html" class="nav-item">
+          <span class="icon">💼</span>
+          <span>Job Portal</span>
+        </a>
+
+        <!-- Removed Donations -->
+
+        <!-- Changed: now points to events.html -->
+        <a href="events.html" class="nav-item">
+          <span class="icon">📅</span>
+          <span>Events & Reunions</span>
+        </a>
+
+        <!-- Removed Success Stories -->
+        <!-- Removed Feedback -->
+      </nav>
+
+      <button class="logout-btn" id="logoutBtn">
+        <span class="icon">🚪</span>
+        <span>Logout</span>
+      </button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="header">
+        <div class="progress-bar"></div>
+        <div class="header-top">
+          <div class="header-actions"></div>
+        </div>
+      </header>
+
+      <!-- Content Area -->
+      <div class="content">
+        <!-- Connect with Alumni Section -->
+        <section class="section" id="networking">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="icon">👥</span>
+              <h2>Connect with Alumni</h2>
+            </div>
+            <p class="section-description">Reach out to fellow alumni for career guidance, collaboration, or just to reconnect.</p>
+          </div>
+
+          <div class="profiles-grid" id="profilesGrid">
+            <!-- Alumni Profile 1 -->
+            <div class="profile-card" data-username="aman-upadhyay">
+              <div class="profile-avatar">AU</div>
+              <h3>Aman Upadhyay</h3>
+              <p class="role">💼 Full Stack developer at JPR Technosoft</p>
+              <p class="location">📍 Ghaziabad</p>
+              <p class="location">Batch-2024</p>
+              <button class="btn btn-primary btn-connect" type="button">
+                <span>🔗</span> Connect
+              </button>
+            </div>
+
+            <!-- Alumni Profile 2 -->
+            <div class="profile-card" data-username="nitin-verma">
+              <div class="profile-avatar bg-green">NV</div>
+              <h3>Nitin Verma</h3>
+              <p class="role">📊 Web Developer at Prasunet Company</p>
+              <p class="location">Batch-2025</p>
+              <button class="btn btn-primary btn-connect" type="button">
+                <span>🔗</span> Connect
+              </button>
+            </div>
+
+            <!-- Alumni Profile 3 -->
+            <div class="profile-card" data-username="tanu-tyagi">
+              <div class="profile-avatar bg-purple">TT</div>
+              <h3>Tanu Tyagi</h3>
+              <p class="role">🎨 Business Development at Tek inspiration LLC</p>
+              <p class="location">Batch-2024</p>
+              <button class="btn btn-primary btn-connect" type="button">
+                <span>🔗</span> Connect
+              </button>
+            </div>
+
+            <!-- Alumni Profile 4 -->
+            <div class="profile-card" data-username="kaniska-choudhary">
+              <div class="profile-avatar bg-red">KC</div>
+              <h3>Kaniska Choudhary</h3>
+              <p class="role">🚀 Intern at HCLTech</p>
+              <p class="location">Batch-2025</p>
+              <button class="btn btn-primary btn-connect" type="button">
+                <span>🔗</span> Connect
+              </button>
+            </div>
+
+            <!-- Alumni Profile 5 -->
+            <div class="profile-card" data-username="karishma-sain">
+              <div class="profile-avatar bg-indigo">KS</div>
+              <h3>Karishma Sain</h3>
+              <p class="role">💰 Intern at IIIION smart private limited</p>
+              <p class="location">Batch-2025</p>
+              <button class="btn btn-primary btn-connect" type="button">
+                <span>🔗</span> Connect
+              </button>
+            </div>
+
+            <!-- Add more profile cards similarly -->
+          </div>
+        </section>
+
+        <!-- Find a Mentor Section -->
+        <section class="section" id="mentors">
+          <div class="section-header">
+            <div class="section-title">
+              <span class="icon">🎓</span>
+              <h2>Connect with Students</h2>
+            </div>
+          </div>
+
+          <div class="profiles-grid">
+            <!-- Mentor Profile 1 -->
+            <div class="profile-card mentor-card" data-username="pushti-agarwal">
+              <div class="profile-avatar bg-teal">PA</div>
+              <h3>Pushti Agarwal</h3>
+              <p class="role">👔 CSE Branch</p>
+              <p class="experience">⭐ Batch-2022</p>
+              <button class="btn btn-secondary btn-mentorship" type="button">
+                <span>📚</span> Connect
+              </button>
+            </div>
+
+            <!-- Mentor Profile 2 -->
+            <div class="profile-card mentor-card" data-username="riya-yadav">
+              <div class="profile-avatar bg-cyan">RY</div>
+              <h3>Riya Yadav</h3>
+              <p class="role">📈 CSE Branch</p>
+              <p class="experience">⭐ Batch-2022</p>
+              <button class="btn btn-secondary btn-mentorship" type="button">
+                <span>📚</span> Connect
+              </button>
+            </div>
+
+            <!-- Add more mentors -->
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal" id="actionModal">
+    <div class="modal-content">
+      <button class="modal-close">&times;</button>
+      <h2 id="modalTitle"></h2>
+      <p id="modalMessage"></p>
+      <form id="actionForm">
+        <div class="form-group">
+          <label for="message">Message:</label>
+          <textarea id="message" placeholder="Write your message here..." rows="4"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Send</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // === MODAL & STATE ===
+    const modal = document.getElementById("actionModal");
+    const cancelBtn = document.getElementById("cancelBtn");
+    const actionForm = document.getElementById("actionForm");
+    const profilesGrid = document.getElementById("profilesGrid");
+    let activeConnectButton = null;
+
+    function getConnectedProfiles() {
+      return JSON.parse(localStorage.getItem("connectedProfiles") || "[]");
+    }
+    function saveConnectedProfiles(profiles) {
+      localStorage.setItem("connectedProfiles", JSON.stringify(profiles));
+    }
+    function incrementConnectionCount() {
+      let count = localStorage.getItem("connectionCount");
+      count = count ? parseInt(count) + 1 : 1;
+      localStorage.setItem("connectionCount", count);
+    }
+
+    function openModal(title, message) {
+      document.getElementById("modalTitle").textContent = title;
+      document.getElementById("modalMessage").textContent = message;
+      modal.classList.add("active");
+    }
+    function closeModal() {
+      modal.classList.remove("active");
+      actionForm.reset();
+      activeConnectButton = null;
+    }
+
+    // === Restore connected states on page load ===
+    window.addEventListener("DOMContentLoaded", () => {
+      const connectedProfiles = getConnectedProfiles();
+      document.querySelectorAll(".btn-connect").forEach((btn) => {
+        const profileCard = btn.closest(".profile-card");
+        const profileName = profileCard.querySelector("h3").textContent;
+        if (connectedProfiles.includes(profileName)) {
+          btn.textContent = "✅ Connected";
+          btn.disabled = true;
+          btn.style.backgroundColor = "#16a34a";
+        }
+      });
+    });
+
+    // === Event delegation: handle clicks inside profiles grid ===
+    profilesGrid.addEventListener("click", function (e) {
+      // If a connect button (or child) was clicked
+      const connectBtn = e.target.closest(".btn-connect");
+      if (connectBtn && profilesGrid.contains(connectBtn)) {
+        // Stop propagation so card-level click won't fire
+        e.stopPropagation();
+        const profileCard = connectBtn.closest(".profile-card");
+        const profileName = profileCard.querySelector("h3").textContent;
+        activeConnectButton = connectBtn;
+        activeConnectButton.dataset.profileName = profileName;
+        openModal(`Connect with ${profileName}`, "Send a connection request to start networking.");
+        return;
+      }
+
+      // If a mentorship button was clicked
+      const mentorBtn = e.target.closest(".btn-mentorship");
+      if (mentorBtn && profilesGrid.contains(mentorBtn)) {
+        e.stopPropagation();
+        const profileCard = mentorBtn.closest(".profile-card");
+        const profileName = profileCard.querySelector("h3").textContent;
+        openModal(`Request Mentorship from ${profileName}`, "Share your goals and why they’d be a great mentor.");
+        return;
+      }
+
+      // If a profile card (or child) was clicked (but not a button) -> navigate to profile page
+      const card = e.target.closest(".profile-card");
+      if (card && profilesGrid.contains(card)) {
+        // If the click target is a button inside the card, ignore (we handled above)
+        if (e.target.closest("button")) return;
+        const username = card.dataset.username || card.querySelector("h3").textContent.toLowerCase().replace(/\s+/g, '-');
+        // navigate to profile page (pass username param)
+        window.location.href = `profile.html?user=${encodeURIComponent(username)}`;
+      }
+    });
+
+    // === Modal form submit ===
+    actionForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const message = document.getElementById("message").value.trim();
+      if (message === "") {
+        alert("Please write a short message!");
+        return;
+      }
+
+      // Increment connection count
+      incrementConnectionCount();
+
+      // Update local storage with connected profile (only if we have an activeConnectButton)
+      if (activeConnectButton && activeConnectButton.dataset.profileName) {
+        const connectedProfiles = getConnectedProfiles();
+        const profileName = activeConnectButton.dataset.profileName;
+        if (!connectedProfiles.includes(profileName)) {
+          connectedProfiles.push(profileName);
+          saveConnectedProfiles(connectedProfiles);
+        }
+
+        // Update button UI (guard in case it was changed)
+        activeConnectButton.textContent = "✅ Connected";
+        activeConnectButton.disabled = true;
+        activeConnectButton.style.backgroundColor = "#16a34a";
+
+        alert("Message sent successfully! Connection added!");
+      } else {
+        // fallback behaviour if no active button (shouldn't happen with normal flow)
+        alert("Message sent!");
+      }
+
+      closeModal();
+    });
+
+    // === Modal close handlers ===
+    cancelBtn.addEventListener("click", closeModal);
+    document.querySelector(".modal-close").addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+
+    // === Navigation active states & anchor handling ===
+    const navItems = document.querySelectorAll(".nav-item");
+    navItems.forEach((item) => {
+      item.addEventListener("click", function (e) {
+        const href = this.getAttribute("href");
+        if (href && href.endsWith(".html")) {
+          // allow normal navigation to href
+          window.location.href = href;
+          return;
+        }
+        if (href && href.startsWith("#")) {
+          e.preventDefault();
+          navItems.forEach((nav) => nav.classList.remove("active"));
+          this.classList.add("active");
+          // optional: scroll to section
+          const id = href.slice(1);
+          const section = document.getElementById(id);
+          if (section) section.scrollIntoView({ behavior: "smooth" });
+        }
+      });
+    });
+
+    // === Logout behaviour: redirect to index.html ===
+    document.getElementById('logoutBtn').addEventListener('click', function () {
+      if (!confirm('Are you sure you want to logout?')) return;
+      // optional: clear client-side session storage/localStorage here
+      try {
+        sessionStorage.clear();
+        // keep any data you want, or selectively remove keys instead
+        // localStorage.removeItem('someKey');
+      } catch (e) { /* ignore */ }
+
+      // redirect to index.html
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>

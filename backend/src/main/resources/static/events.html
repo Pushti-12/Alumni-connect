@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni Events - Connect & Celebrate</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+
+* {
+    --tw-bg-opacity: 1;
+    --tw-text-opacity: 1;
+}
+:root {
+  --primary-orange: #faf8f7;
+  --primary-blue: #1e40af;
+  --primary-green: #16a34a;
+  --secondary-gray: #f3f4f6;
+  --border-color: #e5e7eb;
+  --text-dark: #1f2937;
+  --text-light: #6b7280;
+  --white: #ffffff;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9fafb;
+  color: var(--text-dark);
+}
+
+.container {
+  display: flex;
+  height: 100vh;
+  background-color: var(--secondary-gray);
+  overflow: hidden;
+}
+
+.sidebar {
+    position: fixed; 
+    left:0;
+    top:0;
+    bottom:0;
+  width: 200px;
+  background: linear-gradient(135deg, var(--primary-orange) 0%, #5c68b6 100%);
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  color: var(--white);
+  box-shadow: var(--shadow-lg);
+  overflow-y: auto;
+}
+main{
+    flex: 1;
+  margin-left: 200px; 
+  height: 100vh;
+  overflow-y: auto; 
+}
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.logo-icon {
+  font-size: 32px;
+}
+
+.sidebar-header h1 {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 32px;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: rgba(249, 248, 248, 0.8);
+  transition: all 0.3s ease;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--white);
+}
+
+.nav-item.active {
+  background-color: rgba(255, 255, 255, 0.25);
+  color: var(--white);
+  font-weight: 600;
+}
+
+.logout-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 16px;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: var(--white);
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.logout-btn:hover {
+  background-color: rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: var(--text-primary);
+}
+
+.section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+}
+
+.event-card {
+  background-color: var(--primary);
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.event-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #1e40af;
+}
+
+.events-grid {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.event-meta {
+  display: flex;
+  gap: 2rem;
+  margin: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.event-description {
+  margin-top: 1rem;
+  color: var(--text-secondary);
+}
+
+.event-organizer {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-color);
+  font-size: 0.9rem;
+}
+
+.badge {
+  background: #1e40af;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: var(--text-secondary);
+}
+
+    </style>
+</head>
+
+<body>
+<div class="container">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo-icon">🎓</div>
+            <h1>Alumni<br>Portal</h1>
+        </div>
+
+        <nav class="nav-menu">
+            <a href="dashboard.html" class="nav-item"><span class="icon">🏠</span>Dashboard</a>
+            <a href="network.html" class="nav-item"><span class="icon">👥</span>Networking Hub</a>
+            <a href="job-portal.html" class="nav-item"><span class="icon">💼</span>Job Portal</a>
+            <a href="success.html" class="nav-item ">⭐ Success Stories</a>
+
+            <!-- Removed Donations -->
+            <!-- Removed Success Stories -->
+            <!-- Removed Feedback -->
+
+            <a href="events.html" class="nav-item"><span class="icon">📅</span>Events & Reunions</a>
+        </nav>
+
+        <!-- added id so logout can be wired to index.html -->
+        <button class="logout-btn" id="logoutBtn">🚪 Logout</button>
+    </aside>
+
+
+    <main>
+
+        <!-- ONLY Upcoming Events Section -->
+        <section class="section">
+            <h2 class="section-title">Upcoming Events</h2>
+            <div class="events-grid" id="eventsList"></div>
+        </section>
+
+    </main>
+</div>
+
+<script>
+
+// SAME SAMPLE EVENTS — UNCHANGED
+const sampleEvents = [
+    {
+        id: 1,
+        organizer: "Aman upadhyay",
+        gradYear: 2024,
+        title: "Web Development",
+        date: "2025-11-15",
+        time: "14:00",
+        location: "Google meet",
+        description: "Step into the world of creativity, logic, and innovation..."
+    },
+    {
+        id: 2,
+        organizer: "Nitin Verma",
+        gradYear: 2025,
+        title: "Tech Networking Night",
+        date: "2025-11-19",
+        time: "18:30",
+        location: "Google meet",
+        description: "Join fellow tech alumni for an evening of networking..."
+    }
+];
+
+let events = [...sampleEvents];
+
+// Formatting helpers
+function formatDate(dateStr) {
+    return new Date(dateStr).toDateString();
+}
+function formatTime(timeStr) {
+    const [hour, minute] = timeStr.split(":");
+    const h = parseInt(hour);
+    return `${h % 12 || 12}:${minute} ${h >= 12 ? "PM" : "AM"}`;
+}
+
+// Render events — unchanged
+function renderEvents() {
+    const list = document.getElementById("eventsList");
+
+    if (events.length === 0) {
+        list.innerHTML = `<div class="empty-state">No events yet.</div>`;
+        return;
+    }
+
+    list.innerHTML = events.map(e => `
+        <div class="event-card">
+            <h3 class="event-title">${e.title}</h3>
+            <div class="event-meta">
+                <div>📅 ${formatDate(e.date)}</div>
+                <div>⏰ ${formatTime(e.time)}</div>
+                <div>📍 ${e.location}</div>
+            </div>
+            <p class="event-description">${e.description}</p>
+            <div class="event-organizer">
+                <strong>Organized by:</strong> ${e.organizer}
+                <span class="badge">Class of ${e.gradYear}</span>
+            </div>
+        </div>
+    `).join("");
+}
+
+renderEvents();
+
+// === LOGOUT: redirect to index.html ===
+document.getElementById('logoutBtn').addEventListener('click', function () {
+  if (!confirm('Are you sure you want to logout?')) return;
+  try { sessionStorage.clear(); } catch (err) { /* ignore */ }
+  window.location.href = 'index.html';
+});
+
+</script>
+
+</body>
+</html>

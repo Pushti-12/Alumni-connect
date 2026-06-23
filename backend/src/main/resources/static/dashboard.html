@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard — Alumni Portal</title>
+  <style>
+    :root{
+      --bg:#f3f4f6;
+      --card:#ffffff;
+      --muted:#64748b;
+      --accent:#5c68b6;
+      --sidebar-grad: linear-gradient(135deg,#faf8f7 0%, #5c68b6 100%);
+      --border:#e5e7eb;
+      --shadow: 0 6px 18px rgba(15,23,42,0.06);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background:var(--bg);
+      color:#111827;
+      min-height:100vh;
+    }
+
+    /* layout */
+    .sidebar{
+      position:fixed; left:0; top:0; bottom:0;
+      width:220px;
+      padding:24px;
+      background:var(--sidebar-grad);
+      color:#fff;
+      box-shadow:var(--shadow);
+      overflow:auto;
+    }
+    .logo {
+      display:flex; align-items:center; gap:12px;
+    }
+    .logo .mark { font-size:28px }
+    .logo h1 { font-size:16px; line-height:1; font-weight:700; margin:0; }
+    .nav { margin-top:26px; display:flex; flex-direction:column; gap:8px; }
+    .nav a.nav-item{
+      display:flex; align-items:center; gap:10px;
+      padding:10px; border-radius:8px; text-decoration:none; color:rgba(255,255,255,0.95);
+    }
+    .nav a.nav-item:hover{ background: rgba(255,255,255,0.12); }
+    .nav a.nav-item.active{ background: rgba(0,0,0,0.12); font-weight:700; }
+
+    .sidebar .logout {
+      margin-top:22px;
+    }
+
+    main {
+      margin-left:220px;
+      padding:28px;
+    }
+    .topbar { display:flex; align-items:center; gap:12px; justify-content:space-between; margin-bottom:18px; }
+    .card {
+      background:var(--card); border-radius:12px; padding:18px; box-shadow:var(--shadow);
+      border:1px solid var(--border);
+    }
+
+    .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap:16px; margin-top:16px; }
+
+    /* Account settings specific */
+    .account-card { max-width:1000px; margin-top:18px; }
+    .form-grid { display:grid; grid-template-columns: repeat(2,1fr); gap:12px; margin-top:12px; }
+    .form-group { display:flex; flex-direction:column; gap:6px; }
+    label { font-size:13px; font-weight:600; color:var(--muted); }
+    input, textarea, select { padding:8px 10px; border:1px solid var(--border); border-radius:8px; font-family:inherit; }
+    textarea { min-height:100px; resize:vertical; }
+    .btn { display:inline-block; padding:10px 14px; border-radius:8px; background:var(--accent); color:#fff; border:none; cursor:pointer; font-weight:700; }
+    .btn.ghost { background:#fff; color:var(--accent); border:1px solid var(--border); }
+
+    /* Hide by default */
+    #account-settings { display: none; }
+
+    .small-note { color:var(--muted); font-size:13px; margin-top:8px; }
+
+    /* Profile summary style (matches screenshot look) */
+    .profile-summary {
+      background: #fff;
+      border-radius: 10px;
+      padding: 18px;
+      border:1px solid var(--border);
+      display:flex;
+      gap:16px;
+      align-items:center;
+      margin-bottom:16px;
+      box-shadow: var(--shadow);
+    }
+    .profile-avatar {
+      width:64px; height:64px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-weight:700; color:#fff; font-size:20px;
+      background: linear-gradient(135deg,#5c68b6,#60a5fa);
+      flex:0 0 64px;
+    }
+    .profile-main { flex:1 }
+    .profile-name { font-size:18px; font-weight:800; margin-bottom:6px; }
+    .profile-role { color:var(--muted); margin-bottom:6px; }
+    .profile-email { color:var(--muted); font-size:13px; margin-bottom:6px; }
+    .profile-stats { color:var(--muted); font-size:13px; }
+
+    .section-block { margin-top:12px; background:#fff; border-radius:10px; border:1px solid var(--border); padding:14px; box-shadow:var(--shadow); }
+
+    @media (max-width:820px){
+      .sidebar{ position:relative; width:100%; display:flex; flex-direction:row; gap:12px; padding:12px 16px; align-items:center}
+      main{ margin-left:0; padding:16px; }
+      .nav{ flex-direction:row; overflow:auto; padding-top:8px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
+      .profile-summary { flex-direction:column; align-items:flex-start; gap:12px; }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar" aria-label="sidebar">
+    <div class="logo">
+      <div class="mark">🎓</div>
+      <div>
+        <h1>Alumni Portal</h1>
+        <div style="font-size:12px;opacity:0.9">Your campus connection</div>
+      </div>
+    </div>
+
+    <nav class="nav" aria-label="main navigation">
+      <a href="dashboard.html" class="nav-item" id="nav-dashboard">🏠 <span style="margin-left:6px">Dashboard</span></a>
+      <a href="alumni-network.html" class="nav-item" id="nav-network">👥 <span style="margin-left:6px">Network</span></a>
+      <a href="job-portal.html" class="nav-item" id="nav-jobportal">💼 <span style="margin-left:6px">Job Portal</span></a>
+      <a href="events.html" class="nav-item" id="nav-events">📅 <span style="margin-left:6px">Events</span></a>
+
+      <!-- Account Settings is an in-page section (hidden until clicked) -->
+      <a href="#account-settings" class="nav-item" id="nav-account">⚙️ <span style="margin-left:6px">Account Settings</span></a>
+    </nav>
+
+    <div class="logout">
+      <button id="logoutBtn" style="width:100%;padding:10px;border-radius:10px;border:none;background:#fff;color:var(--accent);font-weight:700;cursor:pointer">Logout 🚪</button>
+    </div>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px">
+        <h2 style="margin:0">Dashboard</h2>
+        <div style="color:var(--muted);font-size:13px">Welcome back — quick links and snapshots</div>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:10px"></div>
+    </div>
+
+    <!-- Profile summary (populated from DB) -->
+    <div id="profileSummary" class="profile-summary" style="display:none;">
+      <div id="avatar" class="profile-avatar">A</div>
+      <div class="profile-main">
+        <div id="profileName" class="profile-name">Full Name</div>
+        <div id="profileRole" class="profile-role">Student Member · Short introduction</div>
+        <div id="profileEmail" class="profile-email">email@example.com</div>
+        <div id="profileStats" class="profile-stats">Total Connections: <strong id="connectionsCount">0</strong></div>
+      </div>
+      <div style="flex:0 0 120px; text-align:right">
+        <button id="editProfileBtn" class="btn ghost" style="background:#fff;color:var(--accent)">Edit</button>
+      </div>
+    </div>
+
+    <section class="card">
+      <h3 style="margin:0 0 8px 0">Quick Links</h3>
+      <div class="grid" style="margin-top:12px">
+        <div style="padding:12px;border-radius:10px;background:linear-gradient(90deg,#eef2ff,#ffffff);display:flex;flex-direction:column;gap:8px;min-height:96px">
+          <strong>Mentorship</strong>
+          <p style="margin:0;color:var(--muted)">Accept mentees, set office hours or join a mentoring cohort.</p>
+          <a href="network.html" style="font-size:13px;color:var(--accent);text-decoration:none;margin-top:auto">Manage mentees →</a>
+        </div>
+        <div style="padding:12px;border-radius:10px;background:linear-gradient(90deg,#fff7ed,#ffffff);display:flex;flex-direction:column;gap:8px;min-height:96px">
+          <strong>Opportunities</strong>
+          <p style="margin:0;color:var(--muted)">Share fellowships, corporate partnerships, sponsorships and projects.</p>
+          <a href="job-portal.html" style="font-size:13px;color:var(--accent);text-decoration:none;margin-top:auto">Explore opportunities →</a>
+        </div>
+        <div style="padding:12px;border-radius:10px;background:linear-gradient(90deg,#eefde7,#ffffff);display:flex;flex-direction:column;gap:8px;min-height:96px">
+          <strong>Events</strong>
+          <p style="margin:0;color:var(--muted)">Create reunions, track RSVPs and publish event summaries.</p>
+          <a href="events.html" style="font-size:13px;color:var(--accent);text-decoration:none;margin-top:auto">Manage events →</a>
+        </div>
+      </div>
+    </section>
+
+    <section style="margin-top:18px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <h3 style="margin:0">Activity</h3>
+        <div style="color:var(--muted);font-size:13px">Latest updates from the portal</div>
+      </div>
+
+      <div class="grid" style="margin-top:12px">
+        <div class="card">
+          <strong>Campus Drive — Nov 2025</strong>
+          <div style="color:var(--muted);font-size:13px;margin-top:6px">Companies registered: 12 · Roles: Software, QA, Data Analyst</div>
+        </div>
+        <div class="card">
+          <strong>New Internship Listings</strong>
+          <div style="color:var(--muted);font-size:13px;margin-top:6px">Internshala & LinkedIn updated with 150+ new listings across domains.</div>
+        </div>
+        <div class="card">
+          <strong>Alumni Meetup</strong>
+          <div style="color:var(--muted);font-size:13px;margin-top:6px">Register for the alumni online meetup — Dec 6, 2025.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Personal + Academic details block (secondary view similar to screenshot) -->
+     
+    <div id="personalAcademicBlock" class="section-block" style="margin-top:18px; display:none;">
+      <div style="display:flex; justify-content:space-between; align-items:center">
+        <h3 style="margin:0">My Profile</h3>
+        <button id="editProfileBtnTop" class="btn ghost" style="background:#fff;color:var(--accent)">Edit</button>
+      </div>
+
+      <div style="margin-top:12px; display:flex; gap:12px; align-items:center;">
+        <div style="width:72px; height:72px; border-radius:50%; background:linear-gradient(135deg,#5c68b6,#60a5fa); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:20px;" id="cardAvatar">A</div>
+        <div>
+          <div id="cardName" style="font-weight:800; font-size:16px;">Full Name</div>
+          <div id="cardIntro" style="color:var(--muted); font-size:13px">Student Member · Short introduction</div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px;">
+        <h4 style="margin:0 0 8px 0">Personal Information</h4>
+        <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:8px;">
+          <div style="background:#f8fafc;padding:12px;border-radius:8px;"> <div style="color:var(--muted);font-size:13px">First Name</div> <div id="infoFirstName" style="margin-top:6px"></div></div>
+          <div style="background:#f8fafc;padding:12px;border-radius:8px;"> <div style="color:var(--muted);font-size:13px">Last Name</div> <div id="infoLastName" style="margin-top:6px"></div></div>
+
+          <div style="background:#f8fafc;padding:12px;border-radius:8px;"> <div style="color:var(--muted);font-size:13px">Email</div> <div id="infoEmail" style="margin-top:6px"></div></div>
+          <div style="background:#f8fafc;padding:12px;border-radius:8px;"> <div style="color:var(--muted);font-size:13px">Phone</div> <div id="infoPhone" style="margin-top:6px"></div></div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <h4 style="margin:0 0 8px 0">Academic Details</h4>
+        <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:8px;">
+          <div style="background:#f8fafc;padding:12px;border-radius:8px;"> <div style="color:var(--muted);font-size:13px">Batch</div> <div id="infoBatch" style="margin-top:6px"></div></div>
+          <div style="background:#f8fafc;padding:12px;border-radius:8px;"> <div style="color:var(--muted);font-size:13px">Graduation Year</div> <div id="infoGrad" style="margin-top:6px"></div></div>
+          <div style="background:#f8fafc;padding:12px;border-radius:8px;"> <div style="color:var(--muted);font-size:13px">Department</div> <div id="infoDept" style="margin-top:6px"></div></div>
+          <div style="background:#f8fafc;padding:12px;border-radius:8px;"> <div style="color:var(--muted);font-size:13px">Course</div> <div id="infoCourse" style="margin-top:6px"></div></div>
+        </div>
+      </div>
+    </div> -
+
+    <!-- Account Settings section (hidden by default; shown only when account nav clicked) -->
+    <section id="account-settings" class="account-card card" aria-hidden="true">
+      <h3 style="margin:0 0 12px 0">Account Settings</h3>
+      <p style="margin:0 0 12px 0;color:var(--muted)">Manage profile information, academic details and professional info shared with the alumni network.</p>
+
+      <div class="small-note" id="profileStatus">Profile not loaded. Click "Account Settings" in the sidebar to load your profile.</div>
+
+      <div class="form-grid" id="profileFormGrid" style="display:none;">
+        <div class="form-group">
+          <label for="firstName">First name</label>
+          <input id="firstName" type="text" placeholder="First name" />
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Last name</label>
+          <input id="lastName" type="text" placeholder="Last name" />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input id="email" type="email" placeholder="name@example.com" />
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone</label>
+          <input id="phone" type="text" placeholder="+91 ..." />
+        </div>
+      </div>
+
+      <div class="form-grid" id="profileFormGrid2" style="display:none;margin-top:12px;">
+        <div class="form-group">
+          <label for="batch">Batch</label>
+          <input id="batch" type="text" placeholder="e.g., CSE 2018" />
+        </div>
+        <div class="form-group">
+          <label for="gradYear">Graduation Year</label>
+          <input id="gradYear" type="text" placeholder="2022" />
+        </div>
+
+        <div class="form-group">
+          <label for="department">Department</label>
+          <input id="department" type="text" placeholder="Computer Science" />
+        </div>
+        <div class="form-group">
+          <label for="course">Course</label>
+          <input id="course" type="text" placeholder="B.Tech" />
+        </div>
+      </div>
+
+      <div class="form-grid" id="profileFormGrid3" style="display:none;margin-top:12px;">
+        <div class="form-group">
+          <label for="currentJob">Current job / Role</label>
+          <input id="currentJob" type="text" placeholder="Senior Engineer / Founder / etc." />
+        </div>
+        <div class="form-group">
+          <label for="company">Company</label>
+          <input id="company" type="text" placeholder="Company name" />
+        </div>
+
+        <div class="form-group">
+          <label for="organization">Organization (volunteer/NGO)</label>
+          <input id="organization" type="text" placeholder="Organization" />
+        </div>
+        <div class="form-group">
+          <label for="experience">Work experience (years)</label>
+          <input id="experience" type="text" placeholder="e.g., 3.5" />
+        </div>
+      </div>
+
+      <div id="profileFormGrid4" style="display:none;margin-top:12px;">
+        <label for="certificates">Certificates / Links</label>
+        <textarea id="certificates" placeholder="Add links or short list of certificates"></textarea>
+      </div>
+
+      <div style="margin-top:14px; display:flex; gap:8px;" id="profileActions" hidden>
+        <button id="saveProfile" class="btn">Save changes</button>
+        <button id="resetProfile" class="btn ghost" type="button">Reset</button>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    (function(){
+      const API_BASE = "http://127.0.0.1:5000"; // adjust if backend runs elsewhere
+      const navItems = document.querySelectorAll('.nav-item');
+      const accountSection = document.getElementById('account-settings');
+      const accountNav = document.getElementById('nav-account');
+      const profileStatus = document.getElementById('profileStatus');
+      const profileFormGrid = document.getElementById('profileFormGrid');
+      const profileFormGrid2 = document.getElementById('profileFormGrid2');
+      const profileFormGrid3 = document.getElementById('profileFormGrid3');
+      const profileFormGrid4 = document.getElementById('profileFormGrid4');
+      const profileActions = document.getElementById('profileActions');
+
+      // Profile display elements
+      const profileSummary = document.getElementById('profileSummary');
+      const avatarEl = document.getElementById('avatar');
+      const profileNameEl = document.getElementById('profileName');
+      const profileRoleEl = document.getElementById('profileRole');
+      const profileEmailEl = document.getElementById('profileEmail');
+      const connectionsCountEl = document.getElementById('connectionsCount');
+
+      const personalBlock = document.getElementById('personalAcademicBlock');
+      const cardAvatar = document.getElementById('cardAvatar');
+      const cardName = document.getElementById('cardName');
+      const cardIntro = document.getElementById('cardIntro');
+      const infoFirstName = document.getElementById('infoFirstName');
+      const infoLastName = document.getElementById('infoLastName');
+      const infoEmail = document.getElementById('infoEmail');
+      const infoPhone = document.getElementById('infoPhone');
+      const infoBatch = document.getElementById('infoBatch');
+      const infoGrad = document.getElementById('infoGrad');
+      const infoDept = document.getElementById('infoDept');
+      const infoCourse = document.getElementById('infoCourse');
+
+      // Form controls
+      const saveBtn = document.getElementById('saveProfile');
+      const resetBtn = document.getElementById('resetProfile');
+      const editBtns = document.querySelectorAll('#editProfileBtn, #editProfileBtnTop');
+
+      // helper to find logged-in user id (tries multiple common storage keys)
+      function getStoredUserId() {
+        try {
+          if (sessionStorage.getItem('userId')) return sessionStorage.getItem('userId');
+          if (localStorage.getItem('userId')) return localStorage.getItem('userId');
+
+          // try stored alumni_user / alumniUser
+          const maybe = localStorage.getItem('alumni_user') || sessionStorage.getItem('alumni_user') || localStorage.getItem('alumniUser') || sessionStorage.getItem('alumniUser');
+          if (maybe) {
+            try {
+              const parsed = JSON.parse(maybe);
+              if (parsed && parsed.id) return String(parsed.id);
+            } catch(e){}
+          }
+          return null;
+        } catch(e) { return null; }
+      }
+
+      // map profile object to UI
+      function displayProfile(user, profile) {
+        // name handling
+        const displayName = (user && (user.fullName || user.full_name)) || (profile && (profile.first_name ? (profile.first_name + (profile.last_name ? ' ' + profile.last_name : '')) : null)) || user && user.username || '—';
+        const initials = displayName.split(' ').map(p => p[0]).slice(0,2).join('').toUpperCase() || (user && user.username && user.username.slice(0,2).toUpperCase()) || 'A';
+
+        avatarEl.textContent = initials;
+        cardAvatar.textContent = initials;
+
+        profileNameEl.textContent = displayName;
+        cardName.textContent = displayName;
+
+        const roleText = (profile && profile.current_job) ? profile.current_job + (profile.company ? ' · ' + profile.company : '') : (profile && profile.company ? profile.company : 'Student Member');
+        profileRoleEl.textContent = roleText;
+        cardIntro.textContent = roleText;
+
+        const emailText = (user && (user.username || user.email)) || (profile && profile.email) || '';
+        profileEmailEl.textContent = emailText;
+        infoEmail.textContent = emailText;
+
+        // populate personal + academic summary blocks
+        infoFirstName.textContent = profile && profile.first_name ? profile.first_name : '';
+        infoLastName.textContent = profile && profile.last_name ? profile.last_name : '';
+        infoPhone.textContent = profile && profile.phone ? profile.phone : '';
+        infoBatch.textContent = profile && profile.batch ? profile.batch : '';
+        infoGrad.textContent = profile && profile.grad_year ? profile.grad_year : '';
+        infoDept.textContent = profile && profile.department ? profile.department : '';
+        infoCourse.textContent = profile && profile.course ? profile.course : '';
+
+        // connections count (if you have logic to count, replace with proper API; for now show 0 if not present)
+        connectionsCountEl.textContent = profile && profile.connections_count ? profile.connections_count : 0;
+
+        // show areas
+        profileSummary.style.display = '';
+        personalBlock.style.display = '';
+      }
+
+      // populate account-settings form fields
+      function populateFormFromProfile(profile, user) {
+        if (!profile) return;
+        document.getElementById('firstName').value = profile.first_name || '';
+        document.getElementById('lastName').value = profile.last_name || '';
+        document.getElementById('email').value = (user && (user.username || user.email)) || profile.email || '';
+        document.getElementById('phone').value = profile.phone || '';
+        document.getElementById('batch').value = profile.batch || '';
+        document.getElementById('gradYear').value = profile.grad_year || '';
+        document.getElementById('department').value = profile.department || '';
+        document.getElementById('course').value = profile.course || '';
+        document.getElementById('currentJob').value = profile.current_job || '';
+        document.getElementById('company').value = profile.company || '';
+        document.getElementById('organization').value = profile.organization || '';
+        document.getElementById('experience').value = profile.experience || '';
+        document.getElementById('certificates').value = profile.certificates || '';
+      }
+
+      // read form into backend field names
+      function readProfileFormPayload() {
+        return {
+          first_name: document.getElementById('firstName').value.trim(),
+          last_name: document.getElementById('lastName').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          batch: document.getElementById('batch').value.trim(),
+          grad_year: document.getElementById('gradYear').value.trim(),
+          department: document.getElementById('department').value.trim(),
+          course: document.getElementById('course').value.trim(),
+          current_job: document.getElementById('currentJob').value.trim(),
+          company: document.getElementById('company').value.trim(),
+          organization: document.getElementById('organization').value.trim(),
+          experience: document.getElementById('experience').value.trim(),
+          certificates: document.getElementById('certificates').value.trim()
+        };
+      }
+
+      // show/hide account-settings areas
+      function showProfileFormArea(show) {
+        if (show) {
+          profileStatus.style.display = 'none';
+          profileFormGrid.style.display = 'grid';
+          profileFormGrid2.style.display = 'grid';
+          profileFormGrid3.style.display = 'grid';
+          profileFormGrid4.style.display = 'block';
+          profileActions.hidden = false;
+        } else {
+          profileStatus.style.display = 'block';
+          profileFormGrid.style.display = 'none';
+          profileFormGrid2.style.display = 'none';
+          profileFormGrid3.style.display = 'none';
+          profileFormGrid4.style.display = 'none';
+          profileActions.hidden = true;
+        }
+      }
+
+      // fetch profile from server
+      async function fetchProfileForUser(userId) {
+        if (!userId) {
+          profileStatus.textContent = 'You are not signed in. Please sign in to load your profile.';
+          showProfileFormArea(false);
+          return null;
+        }
+        profileStatus.textContent = 'Loading profile...';
+        showProfileFormArea(false);
+        try {
+          const res = await fetch(`${API_BASE}/api/profile/${encodeURIComponent(userId)}`);
+          if (res.status === 404) {
+            profileStatus.textContent = 'Profile not found for this user.';
+            return null;
+          }
+          if (!res.ok) {
+            profileStatus.textContent = 'Error loading profile. Please try again.';
+            return null;
+          }
+          const body = await res.json();
+          const profile = body.profile || {};
+          const user = body.user || null;
+          // render display and form
+          displayProfile(user, profile);
+          populateFormFromProfile(profile, user);
+          profileStatus.textContent = 'Profile loaded. Make changes and click Save.';
+          showProfileFormArea(true);
+          return { profile, user };
+        } catch (e) {
+          profileStatus.textContent = 'Network error while loading profile.';
+          return null;
+        }
+      }
+
+      // update profile to server
+      async function saveProfileToServer(userId, payload) {
+        if (!userId) {
+          alert('You must be signed in to save profile.');
+          return null;
+        }
+        try {
+          const res = await fetch(`${API_BASE}/api/profile/${encodeURIComponent(userId)}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          const body = await res.json();
+          if (!res.ok) {
+            alert(body.error || 'Error saving profile.');
+            return null;
+          }
+          // update display area after saved
+          // re-fetch profile for fresh data
+          await fetchProfileForUser(userId);
+          alert('Profile saved successfully.');
+          return body.profile || null;
+        } catch (e) {
+          alert('Network error — could not save profile.');
+          return null;
+        }
+      }
+
+      // helper to determine userId and attempt populate when account settings clicked
+      let cachedUserId = null;
+      async function handleAccountNavClicked() {
+        cachedUserId = getStoredUserId();
+        if (!cachedUserId) {
+          profileStatus.textContent = 'You are not signed in. Please sign in to load and save your profile.';
+          showProfileFormArea(false);
+          return;
+        }
+        await fetchProfileForUser(cachedUserId);
+      }
+
+      // Clicking nav items
+      navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          const href = item.getAttribute('href') || '';
+
+          // If it's an in-page anchor (account settings)
+          if (href && href.startsWith('#')) {
+            e.preventDefault();
+            // Show account settings
+            if (accountSection) {
+              accountSection.style.display = 'block';
+              accountSection.setAttribute('aria-hidden', 'false');
+              accountSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            // mark only this nav item active
+            navItems.forEach(n => n.classList.remove('active'));
+            item.classList.add('active');
+
+            // Load profile data for the signed-in user
+            handleAccountNavClicked();
+            return;
+          }
+
+          // For normal links that navigate to other pages: hide account section and allow navigation
+          if (accountSection) {
+            accountSection.style.display = 'none';
+            accountSection.setAttribute('aria-hidden', 'true');
+          }
+          // Let the browser navigate normally for .html links
+          // But if the clicked link points to the current page, prevent reload and update active class
+          const hrefName = href.split('/').pop();
+          const current = window.location.pathname.split('/').pop() || 'dashboard.html';
+          if (hrefName === current) {
+            e.preventDefault();
+            navItems.forEach(n => n.classList.remove('active'));
+            item.classList.add('active');
+          }
+        });
+      });
+
+      // LOGOUT button: redirect to index.html (clear session storage)
+      document.getElementById('logoutBtn').addEventListener('click', function() {
+        if (!confirm('Logout?')) return;
+        try { sessionStorage.removeItem('userId'); sessionStorage.removeItem('user'); localStorage.removeItem('userId'); } catch(e){}
+        window.location.href = 'index.html';
+      });
+
+      // Save button handler
+      saveBtn.addEventListener('click', async function(){
+        const payload = readProfileFormPayload();
+
+        // minimal client validation: at least one field non-empty
+        const hasData = Object.values(payload).some(v => v && v.length > 0);
+        if (!hasData) {
+          if (!confirm('All fields are empty. Do you want to save empty profile?')) return;
+        }
+
+        // attempt to get user id
+        const uid = cachedUserId || getStoredUserId();
+        if (!uid) {
+          // If not signed in, fallback to local save (existing behavior)
+          localStorage.setItem('alumniUser', JSON.stringify({
+            firstName: payload.first_name,
+            lastName: payload.last_name,
+            email: document.getElementById('email').value.trim(),
+            phone: payload.phone,
+            batch: payload.batch,
+            gradYear: payload.grad_year,
+            department: payload.department,
+            course: payload.course,
+            currentJob: payload.current_job,
+            company: payload.company,
+            organization: payload.organization,
+            experience: payload.experience,
+            certificates: payload.certificates,
+            savedAt: new Date().toISOString()
+          }));
+          alert('Profile saved locally (you are not signed in).');
+          return;
+        }
+
+        // Save to server
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+        await saveProfileToServer(uid, payload);
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save changes';
+      });
+
+      // Reset handler: reload from server if signed, else restore local saved
+      resetBtn.addEventListener('click', function(){
+        if (!confirm('Reset profile form to saved values? (Cancel will clear fields)')) return;
+        const uid = cachedUserId || getStoredUserId();
+        if (uid) {
+          fetchProfileForUser(uid);
+        } else {
+          const saved = localStorage.getItem('alumniUser');
+          if (saved) {
+            try {
+              const p = JSON.parse(saved);
+              populateFormFromProfile({
+                first_name: p.firstName || p.first_name,
+                last_name: p.lastName || p.last_name,
+                phone: p.phone,
+                batch: p.batch,
+                grad_year: p.gradYear || p.grad_year,
+                department: p.department,
+                course: p.course,
+                current_job: p.currentJob || p.current_job,
+                company: p.company,
+                organization: p.organization,
+                experience: p.experience,
+                certificates: p.certificates
+              }, null);
+              profileStatus.textContent = 'Loaded local saved profile.';
+              showProfileFormArea(true);
+            } catch(e){
+              populateFormFromProfile({}, null);
+            }
+          } else {
+            // clear fields
+            populateFormFromProfile({}, null);
+            profileStatus.textContent = 'No saved profile found locally.';
+            showProfileFormArea(false);
+          }
+        }
+      });
+
+      // Edit profile buttons: open the account-settings section and load
+      editBtns.forEach(b => b.addEventListener('click', (e) => {
+        e.preventDefault();
+        // show account settings
+        if (accountSection) {
+          accountSection.style.display = 'block';
+          accountSection.setAttribute('aria-hidden', 'false');
+          accountSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        // make nav item active
+        navItems.forEach(n => n.classList.remove('active'));
+        if (accountNav) accountNav.classList.add('active');
+        handleAccountNavClicked();
+      }));
+
+      // If the page was loaded with #account-settings in URL, show section and mark nav active
+      if (location.hash === '#account-settings') {
+        if (accountSection) {
+          accountSection.style.display = 'block';
+          accountSection.setAttribute('aria-hidden', 'false');
+          setTimeout(()=> accountSection.scrollIntoView({behavior:'smooth'}), 120);
+        }
+        navItems.forEach(n => n.classList.remove('active'));
+        if (accountNav) accountNav.classList.add('active');
+        handleAccountNavClicked();
+      }
+
+      // on load: try to fetch user/profile and populate the dashboard view
+      (async function initialLoad() {
+        const uid = getStoredUserId();
+        if (!uid) {
+          // If not signed-in, we can try local saved copy
+          const local = localStorage.getItem('alumniUser');
+          if (local) {
+            try {
+              const parsed = JSON.parse(local);
+              // adapt parsed keys to display
+              displayProfile({ username: parsed.email || '' }, {
+                first_name: parsed.firstName || parsed.first_name,
+                last_name: parsed.lastName || parsed.last_name,
+                phone: parsed.phone,
+                batch: parsed.batch,
+                grad_year: parsed.gradYear,
+                department: parsed.department,
+                course: parsed.course,
+                current_job: parsed.currentJob,
+                company: parsed.company,
+                certificates: parsed.certificates,
+                connections_count: parsed.connections_count || 0
+              });
+            } catch(e){}
+          }
+          // no user signed in: keep UI minimal
+          return;
+        }
+        // fetch from server and render
+        await fetchProfileForUser(uid);
+      })();
+
+      // set initial active nav based on url
+      (function setActiveFromLocation(){
+        const loc = window.location.pathname.split('/').pop() || 'dashboard.html';
+        navItems.forEach(a => {
+          const href = a.getAttribute('href') || '';
+          const hrefName = href.split('/').pop();
+          if (href && href.startsWith('#')) {
+            a.classList.remove('active');
+          } else {
+            if (hrefName === loc) a.classList.add('active');
+            else a.classList.remove('active');
+          }
+        });
+      })();
+
+    })();
+  </script>
+</body>
+</html>

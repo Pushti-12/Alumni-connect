@@ -1,0 +1,11 @@
+target
+**/target
+*.log
+*.tmp
+*.swp
+*.swo
+.DS_Store
+.git
+.gitignore
+README.md
+render.yaml

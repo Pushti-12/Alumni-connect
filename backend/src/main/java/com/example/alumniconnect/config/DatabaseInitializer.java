@@ -3,24 +3,18 @@ package com.example.alumniconnect.config;
 import jakarta.annotation.PostConstruct;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.beans.factory.annotation.Value;
 
 @Component
 public class DatabaseInitializer {
 
     private final JdbcTemplate jdbc;
-    private final String dbName;
 
-    public DatabaseInitializer(JdbcTemplate jdbc, @Value("${app.database.name}") String dbName) {
+    public DatabaseInitializer(JdbcTemplate jdbc) {
         this.jdbc = jdbc;
-        this.dbName = dbName;
     }
 
     @PostConstruct
     public void init() {
-
-        jdbc.execute("CREATE DATABASE IF NOT EXISTS `" + dbName + "` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-        jdbc.execute("USE `" + dbName + "`;");
 
         jdbc.execute("""
             CREATE TABLE IF NOT EXISTS users (
@@ -49,7 +43,7 @@ public class DatabaseInitializer {
                 organization VARCHAR(255),
                 experience VARCHAR(50),
                 certificates TEXT,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
             );
         """);
@@ -73,3 +67,4 @@ public class DatabaseInitializer {
         """);
     }
 }
+

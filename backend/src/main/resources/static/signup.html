@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sign up — Alumni Connect</title>
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#98a0b3;
+      --accent:#6ee7b7;
+      --accent-2:#60a5fa;
+      --danger:#ff6b6b;
+      --glass: rgba(255,255,255,0.03);
+      --radius:14px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background: linear-gradient(180deg,#071024 0%, #061124 100%);
+      color:#e6eef8;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+    .container{ width:100%; max-width:560px; }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius: var(--radius);
+      padding:22px;
+      box-shadow: 0 10px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.03);
+      backdrop-filter: blur(6px);
+    }
+    .brand{ display:flex; gap:12px; align-items:center; margin-bottom:14px; }
+    .logo{ width:44px; height:44px; border-radius:10px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); display:flex; align-items:center; justify-content:center; font-weight:700; color:#021426; font-size:18px; }
+    h1{ margin:0; font-size:18px; letter-spacing:0.2px; }
+    p.lead{ margin:6px 0 12px 0; color:var(--muted); font-size:13px; }
+
+    form { display:flex; flex-direction:column; gap:10px; }
+    label { font-size:13px; color:var(--muted); display:block; margin-bottom:6px; }
+    .input{ display:flex; align-items:center; gap:8px; background: rgba(255,255,255,0.02); border-radius:10px; padding:10px 12px; border: 1px solid rgba(255,255,255,0.03); }
+    input[type="text"], input[type="password"], input[type="email"], input[type="date"], select{ background:transparent; border:0; outline:0; color: #e6eef8; font-size:14px; width:100%; }
+    .small { font-size:13px; color:var(--muted); }
+
+    .actions{ margin-top:6px; display:flex; gap:12px; align-items:center; }
+    .btn{ display:inline-flex; align-items:center; justify-content:center; gap:8px; padding:10px 14px; border-radius:10px; border:0; cursor:pointer; font-weight:700; font-size:14px; }
+    .btn-primary{ background:linear-gradient(90deg,var(--accent),var(--accent-2)); color:#021426; box-shadow: 0 10px 20px rgba(110,231,183,0.08); flex:1; }
+    .btn-ghost{ background: transparent; color:var(--muted); border: 1px solid rgba(255,255,255,0.03); padding:9px 12px; }
+
+    .error { color:var(--danger); font-size:13px; margin-top:6px; }
+    .hint { font-size:12px; color:var(--muted); margin-top:6px; }
+
+    footer.small { margin-top:10px; font-size:12px; color:var(--muted); text-align:center; }
+    @media (max-width:520px){ .card{padding:16px} }
+  </style>
+</head>
+<body>
+  <div class="container" role="main">
+    <div class="card" aria-labelledby="signupHeading">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">AC</div>
+        <div>
+          <h1 id="signupHeading">Create account — Alumni Connect</h1>
+          <p class="lead">Sign up as Student or Alumni. Security question: <strong>Your birthday</strong>.</p>
+        </div>
+      </div>
+
+      <form id="signupForm" novalidate>
+        <div>
+          <label for="fullName">Full name (optional)</label>
+          <div class="input"><input id="fullName" name="fullName" type="text" placeholder="Your full name" /></div>
+        </div>
+
+        <div>
+          <label for="signupEmail">Username or email</label>
+          <div class="input"><input id="signupEmail" name="signupEmail" type="email" placeholder="you@example.com" required /></div>
+        </div>
+
+        <div>
+          <label for="signupPassword">Password</label>
+          <div class="input" style="justify-content:space-between">
+            <input id="signupPassword" name="signupPassword" type="password" placeholder="Choose a password" required />
+            <button type="button" id="toggleSignupPassword" class="btn-ghost" style="margin-left:8px">Show</button>
+          </div>
+        </div>
+
+        <div>
+          <label for="signupAccountType">Account type</label>
+          <div class="input">
+            <select id="signupAccountType" required>
+              <option value="student">Student</option>
+              <option value="alumni">Alumni</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label for="birthday">Your birthday (security question)</label>
+          <div class="input">
+            <input id="birthday" name="birthday" type="date" required aria-required="true" />
+          </div>
+          <div class="hint">Used only for password recovery — keep it accurate.</div>
+        </div>
+
+        <div id="signupError" class="error" role="alert" hidden></div>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary" id="signupBtn">Create account</button>
+          <button type="button" class="btn btn-ghost" id="cancelBtn">Cancel</button>
+        </div>
+
+        <footer class="small">Already have an account? <a href="index.html" style="color:var(--accent-2);text-decoration:none">Sign in</a></footer>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const API_BASE = "http://127.0.0.1:5000"; // change if backend is hosted elsewhere
+
+      const signupForm = document.getElementById('signupForm');
+      const signupEmail = document.getElementById('signupEmail');
+      const signupPassword = document.getElementById('signupPassword');
+      const signupAccountType = document.getElementById('signupAccountType');
+      const fullName = document.getElementById('fullName');
+      const birthday = document.getElementById('birthday');
+      const signupBtn = document.getElementById('signupBtn');
+      const signupError = document.getElementById('signupError');
+      const toggleSignupPassword = document.getElementById('toggleSignupPassword');
+      const cancelBtn = document.getElementById('cancelBtn');
+
+      toggleSignupPassword.addEventListener('click', () => {
+        signupPassword.type = signupPassword.type === 'password' ? 'text' : 'password';
+        toggleSignupPassword.textContent = signupPassword.type === 'password' ? 'Show' : 'Hide';
+      });
+
+      cancelBtn.addEventListener('click', () => {
+        // go back to login page (no unexpected behavior)
+        window.location.href = 'index.html';
+      });
+
+      signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        signupError.hidden = true;
+        signupError.textContent = '';
+
+        const username = signupEmail.value.trim();
+        const password = signupPassword.value;
+        const acct = signupAccountType.value;
+        const fname = fullName.value.trim();
+        const bday = birthday.value; // ISO yyyy-mm-dd from input[type=date]
+
+        if (!username || !password || !acct || !bday) {
+          signupError.textContent = 'Please fill username, password, account type and your birthday.';
+          signupError.hidden = false;
+          return;
+        }
+
+        signupBtn.disabled = true;
+        signupBtn.textContent = 'Creating...';
+
+        const payload = {
+          username: username,
+          password: password,
+          accountType: acct,
+          fullName: fname,
+          birthday: bday   // backend: store this as security answer
+        };
+
+        try {
+          const res = await fetch(API_BASE + '/api/auth/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+
+          let body;
+          try { body = await res.json(); } catch (err) { body = null; }
+
+          if (!res.ok) {
+            const msg = body && (body.error || body.message) ? (body.error || body.message) : ('Signup failed — server returned ' + res.status);
+            signupError.textContent = msg;
+            signupError.hidden = false;
+            return;
+          }
+
+          alert('Account created successfully. You can now sign in.');
+          // redirect to login (index.html)
+          window.location.href = 'index.html';
+        } catch (err) {
+          console.error(err);
+          signupError.textContent = 'Network error — cannot reach server.';
+          signupError.hidden = false;
+        } finally {
+          signupBtn.disabled = false;
+          signupBtn.textContent = 'Create account';
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

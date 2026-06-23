@@ -1,0 +1,14 @@
+services:
+  - type: web_service
+    name: alumni-connect-web
+    env: docker
+    plan: free
+    dockerfilePath: backend/Dockerfile
+    envVars:
+      - key: PORT
+        value: "5000"
+
+  - type: postgres
+    name: alumni-connect-db
+    plan: starter
+    databaseName: alumni_connect

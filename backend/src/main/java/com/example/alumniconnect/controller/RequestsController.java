@@ -18,10 +18,9 @@ public class RequestsController {
 
     @PostMapping("")
     public ResponseEntity<?> create(@RequestBody Map<String, Object> data) {
-        jdbc.update("""
-                INSERT INTO requests (sender_user_id, recipient_user_id, student_name, contact, company_or_college, batch, message, status)
-                VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')
-                """,
+        Integer id = jdbc.queryForObject(
+                "INSERT INTO requests (sender_user_id, recipient_user_id, student_name, contact, company_or_college, batch, message, status) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending') RETURNING id",
+                Integer.class,
                 data.get("sender_user_id"),
                 data.get("recipient_user_id"),
                 data.getOrDefault("student_name", ""),
@@ -30,8 +29,6 @@ public class RequestsController {
                 data.getOrDefault("batch", ""),
                 data.getOrDefault("message", "")
         );
-
-        Integer id = jdbc.queryForObject("SELECT LAST_INSERT_ID()", Integer.class);
         Map<String, Object> req = jdbc.queryForMap("SELECT * FROM requests WHERE id = ?", id);
 
         return ResponseEntity.ok(Map.of("message", "Request created", "request", req));
