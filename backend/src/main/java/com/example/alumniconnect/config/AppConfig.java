@@ -29,9 +29,11 @@ public class AppConfig {
     HikariDataSource ds = new HikariDataSource();
     String dbUrl = System.getenv().getOrDefault("DATABASE_URL", 
         "jdbc:postgresql://localhost:5432/alumni_connect");
-    // Render DATABASE_URL starts with "postgres://" fix it
     if (dbUrl.startsWith("postgres://")) {
         dbUrl = dbUrl.replace("postgres://", "jdbc:postgresql://");
+    }
+    if (dbUrl.startsWith("postgresql://")) {
+        dbUrl = dbUrl.replace("postgresql://", "jdbc:postgresql://");
     }
     ds.setJdbcUrl(dbUrl);
     ds.setUsername(System.getenv().getOrDefault("PGUSER", "postgres"));
