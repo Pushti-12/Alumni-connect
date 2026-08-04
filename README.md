@@ -8,11 +8,11 @@ Alumni Connect is a full-stack web platform designed to help alumni reconnect, d
 - Implemented a secure backend using Java, Spring Boot, Maven, and PostgreSQL.
 - Prepared the application for deployment with Docker and Render.
 
-## Resume-Friendly Project Summary
-- Designed and developed Alumni Connect, a full-stack web platform for alumni networking, mentorship, and community engagement.
-- Built responsive frontend pages and polished the user experience to improve clarity, accessibility, and visual appeal.
-- Implemented backend services and database integration to support user-facing features and deployment-ready architecture.
-- Applied modern web development practices, UI/UX improvements, and cloud deployment preparation for a portfolio-worthy project.
+## Design and Development
+- Developed Alumni Connect as a responsive platform for alumni networking, mentoring, and event coordination.
+- Built frontend interfaces for login, signup, profiles, events, and community navigation.
+- Implemented backend services using Java, Spring Boot, Maven, and PostgreSQL.
+- Prepared the application for containerized deployment with Docker and Render.
 
 ## Skills Demonstrated
 - Frontend: HTML, CSS, JavaScript
