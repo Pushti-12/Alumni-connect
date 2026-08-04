@@ -5,4 +5,5 @@
 /workspaces/Alumni-connect/backend/src/main/java/com/example/alumniconnect/AlumniConnectApplication.java
 /workspaces/Alumni-connect/backend/src/main/java/com/example/alumniconnect/controller/ProfileController.java
 /workspaces/Alumni-connect/backend/src/main/java/com/example/alumniconnect/controller/UserController.java
+/workspaces/Alumni-connect/backend/src/main/java/com/example/alumniconnect/controller/HealthController.java
 /workspaces/Alumni-connect/backend/src/main/java/com/example/alumniconnect/config/SecurityConfig.java

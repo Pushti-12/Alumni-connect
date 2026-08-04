@@ -16,11 +16,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())          // disable CSRF for APIs (only for dev)
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll()          // allow all requests
+                .requestMatchers("/health").permitAll()
+                .anyRequest().permitAll()
             )
-            .httpBasic(Customizer.withDefaults()); // keep http basic available (optional)
+            .httpBasic(Customizer.withDefaults());
 
         return http.build();
     }

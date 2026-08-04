@@ -327,7 +327,9 @@
 
   <script>
     (function(){
-      const API_BASE = "http://127.0.0.1:5000"; // adjust if backend runs elsewhere
+      const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? 'http://127.0.0.1:5000'
+        : '';
       const navItems = document.querySelectorAll('.nav-item');
       const accountSection = document.getElementById('account-settings');
       const accountNav = document.getElementById('nav-account');

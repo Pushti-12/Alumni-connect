@@ -4,9 +4,15 @@ services:
     env: docker
     plan: free
     dockerfilePath: backend/Dockerfile
+    healthCheckPath: /health
+    autoDeploy: true
     envVars:
       - key: PORT
         value: "5000"
+      - key: SPRING_DATASOURCE_USERNAME
+        value: postgres
+      - key: SPRING_DATASOURCE_PASSWORD
+        value: postgres
     databases:
       - name: alumni-connect-db
         envVarName: DATABASE_URL
