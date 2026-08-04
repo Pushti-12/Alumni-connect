@@ -1,83 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Alumni Connect Navbar</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Alumni Connect helps students and alumni stay connected through mentorship, events, opportunities, and meaningful communities." />
+  <title>Alumni Connect | Reconnect and Grow</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <div class="page-shell">
+    <nav class="navbar">
+      <a href="index.html" class="logo" aria-label="Alumni Connect home">
+        <span class="blue-text">Alumni</span><span class="bold-text">Connect</span>
+      </a>
 
-  <nav class="navbar">
-    <div class="logo">
-      <span class="blue-text">Alumni</span><span class="bold-text">Connect</span>
-    </div>
-
-
-
-    <div class="nav-buttons">
-      <a href="login.html" class="join-btn">Login </a>
-    </div>
-  </nav>
-
-
-  
-
-  <div class="container">
-    <div class="left-section">
-      <h1 class="heading">Stay connected beyond graduation</h1>
-      <p>
-        Reconnect with classmates, find mentors, discover events, and unlock new opportunities across the alumni network.
-      </p>
-      <form class="email-form">
-        <input type="email" placeholder="Enter your email" required />  
-    <div class="nav-buttons">
-      <a href="login.html" class="join-btn">Join the waitlist </a>
-    </div>
-      </form>
-      <a href="events.html" class="events-link">Explore upcoming events</a>
-    </div>
-
-    <div class="right-section">
-      <div class="stat-box">
-        <img src="https://picsum.photos/600/400?random=1" class="pic">
+      <div class="nav-buttons">
+        <a href="events.html" class="nav-link">Events</a>
+        <a href="login.html" class="join-btn">Login</a>
       </div>
-    </div>
-   
-  <section class="alumni-section">
-    <h1 >Everything you need to grow your alumni network</h1>
-    <p class="intro">
-      Connect with classmates by year, program, or city. Engage in mentorship, attend events, and share opportunities within the community.
-    </p>
+    </nav>
 
-    <div class="features">
-        <div class="feature-box">
-        
-        <h2>Profile Creation & Updates</h2>
-        <p>Alumni fill out academic, professional, and interest areas.</p>
-      </div>
-      <div class="feature-box">
+    <main class="hero-section">
+      <section class="hero-copy">
+        <p class="eyebrow">Full-stack web project • Resume-ready portfolio</p>
+        <h1>Built a modern alumni engagement platform.</h1>
+        <p class="hero-text">
+          Developed a user-friendly experience for networking, mentorship, and community growth using a responsive frontend and a scalable Spring Boot backend.
+        </p>
 
-        <h2>Mentorship</h2>
-        <p>Get matched with mentors and mentees based on interests and experience.</p>
-      </div>
-      <div class="feature-box">
-        <h2>Events</h2>
-        <p>Stay in the loop with reunions, meetups, and virtual sessions.</p>
-      </div>
-      <div class="feature-box">
-        <h2>Recognition & Success Stories </h2>
-        <p>Alumni achievements highlighted to inspire peers and students.</p>
+        <div class="hero-actions">
+          <a href="signup.html" class="btn btn-primary">Create account</a>
+          <a href="events.html" class="btn btn-secondary">Explore events</a>
+        </div>
+
+        <ul class="highlights">
+          <li>Mentorship matching</li>
+          <li>Career opportunities</li>
+          <li>Community events</li>
+        </ul>
+      </section>
+
+      <aside class="hero-card" aria-label="Community overview">
+        <div class="hero-card__top">
+          <span class="pill">Live community</span>
+          <h2>What members are doing</h2>
+        </div>
+
+        <div class="hero-card__stats">
+          <div>
+            <strong>1.2k+</strong>
+            <span>Active alumni</span>
+          </div>
+          <div>
+            <strong>320</strong>
+            <span>Mentorships</span>
+          </div>
+          <div>
+            <strong>45</strong>
+            <span>Events this month</span>
+          </div>
+        </div>
+
+        <div class="hero-card__item">
+          <div class="dot"></div>
+          <p>New career openings shared every week.</p>
+        </div>
+        <div class="hero-card__item">
+          <div class="dot"></div>
+          <p>Join peer-led sessions and panel discussions.</p>
+        </div>
+      </aside>
+    </main>
+
+    <section class="project-showcase">
+      <div class="section-heading">
+        <p class="eyebrow">Project snapshot</p>
+        <h2>Built as a full-stack alumni engagement platform</h2>
+        <p>
+          The project combines a polished user experience with a dependable backend foundation for networking, mentorship, and community growth.
+        </p>
       </div>
 
-      <div class="feature-box">
-        <h2>Opportunities</h2>
-        <p>Share jobs, internships, and collaborations within the alumni community.</p>
+      <div class="project-grid">
+        <article class="info-card">
+          <h3>Impact</h3>
+          <p>Designed a modern experience for alumni to reconnect, discover opportunities, and stay involved.</p>
+        </article>
+        <article class="info-card">
+          <h3>Stack</h3>
+          <p>HTML, CSS, JavaScript, Java, Spring Boot, Maven, PostgreSQL, Docker, and Render.</p>
+        </article>
+        <article class="info-card">
+          <h3>Focus</h3>
+          <p>Frontend UX, responsive design, secure backend APIs, and deployment readiness.</p>
+        </article>
       </div>
-            <div class="feature-box">
-        <h2>Ai tool</h2>
-        <p>Recommendations for Connections & Jobs</p>
+    </section>
+
+    <section class="feature-section">
+      <div class="section-heading">
+        <p class="eyebrow">Why alumni love it</p>
+        <h2>Everything you need to grow your network</h2>
+        <p>
+          From profile building to mentorship and opportunities, the platform makes it easy to stay engaged and supported.
+        </p>
       </div>
-    </div>
+
+      <div class="feature-grid">
+        <article class="feature-card">
+          <h3>Profile creation</h3>
+          <p>Share your academic journey, interests, and professional highlights in a few clicks.</p>
+        </article>
+        <article class="feature-card">
+          <h3>Mentorship</h3>
+          <p>Connect with experienced mentors and students who can guide the next step.</p>
+        </article>
+        <article class="feature-card">
+          <h3>Events</h3>
+          <p>Stay in the loop with reunions, meetups, and virtual sessions tailored to your interests.</p>
+        </article>
+        <article class="feature-card">
+          <h3>Success stories</h3>
+          <p>Celebrate achievements and inspire others through community-driven recognition.</p>
+        </article>
+        <article class="feature-card">
+          <h3>Opportunities</h3>
+          <p>Share internships, jobs, and collaboration ideas within your alumni circle.</p>
+        </article>
+        <article class="feature-card">
+          <h3>Smart recommendations</h3>
+          <p>Receive thoughtful suggestions for connections, events, and career opportunities.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <h2>Ready to reconnect with your community?</h2>
+      <p>Join the platform, create your profile, and start discovering meaningful opportunities today.</p>
+      <a href="login.html" class="btn btn-primary">Get started</a>
+    </section>
+  </div>
 </body>
 </html>
